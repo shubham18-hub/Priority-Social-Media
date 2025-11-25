@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Priority Social Media</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="page active">
+        <div class="auth-container">
+            <div class="panda-icon">🐼</div>
+            <div class="auth-box">
+                <h1>Welcome Back!</h1>
+                <input type="text" id="loginUsername" placeholder="Username" class="input-field">
+                <input type="password" id="loginPassword" placeholder="Password" class="input-field">
+                <button id="loginBtn" class="primary-btn">Log In</button>
+                <p class="switch-auth">Don't have an account? <span id="goToRegister" class="link">Sign up</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="registerPage" class="page">
+        <div class="auth-container">
+            <div class="panda-icon">🐼</div>
+            <div class="auth-box">
+                <h1>Create Account</h1>
+                <input type="text" id="registerUsername" placeholder="Username" class="input-field">
+                <input type="password" id="registerPassword" placeholder="Password" class="input-field">
+                <input type="password" id="registerConfirmPassword" placeholder="Confirm Password" class="input-field">
+                <button id="registerBtn" class="primary-btn">Sign Up</button>
+                <p class="switch-auth">Already have an account? <span id="goToLogin" class="link">Log in</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="page">
+        <!-- Header -->
+        <header class="app-header">
+            <h2>Priority Social</h2>
+            <nav>
+                <button class="nav-btn" data-page="feed">Feed</button>
+                <button class="nav-btn" data-page="messages">Messages</button>
+                <button class="nav-btn" data-page="notifications">🔔 Notifications</button>
+                <button class="nav-btn" data-page="profile">Profile</button>
+                <button id="logoutBtn" class="nav-btn logout-btn">Logout</button>
+            </nav>
+        </header>
+
+        <!-- Feed Page -->
+        <div id="feed" class="app-page active">
+            <div class="feed-controls">
+                <button id="createPostBtn" class="control-btn">✏️ Create Post</button>
+                <button id="searchUsersBtn" class="control-btn">🔍 Search Users</button>
+                <input type="text" id="searchPosts" placeholder="Search posts..." class="search-input">
+            </div>
+            
+            <div class="stories-section" id="storiesSection"></div>
+            <div class="posts-container" id="postsContainer"></div>
+        </div>
+
+        <!-- Messages Page -->
+        <div id="messages" class="app-page">
+            <div class="messages-list" id="messagesList"></div>
+        </div>
+
+        <!-- Notifications Page -->
+        <div id="notifications" class="app-page">
+            <div class="notif-header">
+                <h3>Notifications</h3>
+                <div>
+                    <button id="markAllReadBtn" class="small-btn">Mark All Read</button>
+                </div>
+            </div>
+            <div class="notifications-list" id="notificationsList"></div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profile" class="app-page">
+            <div class="profile-content">
+                <div class="profile-avatar">👤</div>
+                <h2 id="profileUsername">@username</h2>
+                <p id="profileStats">0 Followers • 0 Following</p>
+                
+                <div class="profile-actions">
+                    <button id="myPostsBtn" class="action-btn">📝 My Posts</button>
+                    <button id="myFollowersBtn" class="action-btn">👥 Followers</button>
+                    <button id="myFollowingBtn" class="action-btn">➕ Following</button>
+                    <button id="closeFriendsBtn" class="action-btn">⭐ Close Friends</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Post Modal -->
+    <div id="createPostModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" data-modal="createPostModal">&times;</span>
+            <h2>Create New Post</h2>
+            <textarea id="postContentInput" placeholder="What's on your mind?" maxlength="1024"></textarea>
+            
+            <!-- Media Upload -->
+            <div class="media-upload-section">
+                <label for="mediaUpload" class="media-upload-btn">
+                    📎 Add Photo/Video
+                    <input type="file" id="mediaUpload" accept="image/*,video/*" style="display: none;" multiple>
+                </label>
+                <div id="mediaPreview" class="media-preview"></div>
+            </div>
+            
+            <!-- Post Visibility -->
+            <div class="post-visibility-section">
+                <label class="visibility-option">
+                    <input type="radio" name="postVisibility" value="all" checked>
+                    <span class="radio-label">
+                        <span class="icon">👥</span>
+                        <span class="text">
+                            <strong>All Followers</strong>
+                            <small>Visible to everyone who follows you</small>
+                        </span>
+                    </span>
+                </label>
+                <label class="visibility-option">
+                    <input type="radio" name="postVisibility" value="closefriends">
+                    <span class="radio-label">
+                        <span class="icon">⭐</span>
+                        <span class="text">
+                            <strong>Close Friends Only</strong>
+                            <small>Only your close friends can see this</small>
+                        </span>
+                    </span>
+                </label>
+            </div>
+            
+            <button id="submitPostBtn" class="primary-btn">Post</button>
+        </div>
+    </div>
+
+    <!-- Search Users Modal -->
+    <div id="searchUsersModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" data-modal="searchUsersModal">&times;</span>
+            <h2>Search Users</h2>
+            <input type="text" id="userSearchInput" placeholder="Search by username..." class="input-field">
+            <button id="searchUserBtn" class="primary-btn">Search</button>
+            <div id="searchResults"></div>
+        </div>
+    </div>
+
+    <!-- Conversation Modal -->
+    <div id="conversationModal" class="modal">
+        <div class="modal-content large">
+            <span class="modal-close" data-modal="conversationModal">&times;</span>
+            <h2 id="conversationUsername">Chat</h2>
+            <div id="conversationMessages" class="conversation-messages"></div>
+            <div class="message-input-box">
+                <input type="text" id="messageInput" placeholder="Type a message..." class="input-field">
+                <button id="sendMessageBtn" class="primary-btn">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User List Modal (for followers/following/close friends) -->
+    <div id="userListModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" data-modal="userListModal">&times;</span>
+            <h2 id="userListTitle">Users</h2>
+            <div id="userListContent"></div>
+        </div>
+    </div>
+
+    <!-- Media Viewer Modal -->
+    <div id="mediaViewer" class="media-viewer">
+        <span class="media-viewer-close" onclick="closeMediaViewer()">&times;</span>
+        <span class="media-viewer-nav prev" onclick="navigateMedia(-1)">&#8249;</span>
+        <div class="media-viewer-content" id="mediaViewerContent"></div>
+        <span class="media-viewer-nav next" onclick="navigateMedia(1)">&#8250;</span>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
