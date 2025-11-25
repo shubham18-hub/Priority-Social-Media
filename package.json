@@ -1,0 +1,12 @@
+{
+  "name": "priority-social-media",
+  "version": "1.0.0",
+  "description": "Priority Social Media Platform with priority-based content delivery",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {}
+}
