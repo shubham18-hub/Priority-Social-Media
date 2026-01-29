@@ -14,7 +14,7 @@
 
 ## 🌟 Live Demo
 
-**🌐 [Try the Web Version](https://your-username.github.io/priority-social-media/frontend.html)**
+**🌐 [Try the Web Version](https://shubham18-hub.github.io/Priority-Social-Media/frontend.html)**
 
 Simply open `frontend.html` in your browser to start using the platform immediately!
 
@@ -49,8 +49,8 @@ Simply open `frontend.html` in your browser to start using the platform immediat
 ### Option 1: Web Version (Recommended)
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/priority-social-media.git
-cd priority-social-media
+git clone https://github.com/shubham18-hub/Priority-Social-Media.git
+cd Priority-Social-Media
 
 # Open in browser
 open frontend.html
@@ -125,8 +125,8 @@ priority-social-media/
 ### **Building from Source**
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/priority-social-media.git
-cd priority-social-media
+git clone https://github.com/shubham18-hub/Priority-Social-Media.git
+cd Priority-Social-Media
 
 # Compile C version
 gcc -Wall -Wextra -g -o social_media fullcode_multimedia.c
@@ -214,8 +214,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 🐛 **Issues**: [GitHub Issues](https://github.com/your-username/priority-social-media/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/your-username/priority-social-media/discussions)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/shubham18-hub/Priority-Social-Media/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/shubham18-hub/Priority-Social-Media/discussions)
 
 ---
 

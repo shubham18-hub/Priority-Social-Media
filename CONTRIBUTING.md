@@ -27,9 +27,9 @@ Pull requests are the best way to propose changes to the codebase. We actively w
 
 In short, when you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the maintainers if that's a concern.
 
-## Report bugs using GitHub's [issue tracker](https://github.com/your-username/priority-social-media/issues)
+## Report bugs using GitHub's [issue tracker](https://github.com/shubham18-hub/Priority-Social-Media/issues)
 
-We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/your-username/priority-social-media/issues/new); it's that easy!
+We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/shubham18-hub/Priority-Social-Media/issues/new); it's that easy!
 
 ## Write bug reports with detail, background, and sample code
 
@@ -171,8 +171,8 @@ We welcome feature requests! Please:
 ## Getting Help
 
 - 📖 Read the [README.md](README.md) for project overview
-- 🐛 Check [Issues](https://github.com/your-username/priority-social-media/issues) for known problems
-- 💬 Start a [Discussion](https://github.com/your-username/priority-social-media/discussions) for questions
+- 🐛 Check [Issues](https://github.com/shubham18-hub/Priority-Social-Media/issues) for known problems
+- 💬 Start a [Discussion](https://github.com/shubham18-hub/Priority-Social-Media/discussions) for questions
 - 📧 Contact maintainers for sensitive issues
 
 ## Recognition
