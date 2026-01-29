@@ -1,0 +1,58 @@
+# Compiled binaries
+*.exe
+*.out
+social_media
+integrated_social
+modern_social_media
+
+# Object files
+*.o
+*.obj
+
+# Data files (user-generated content)
+*.dat
+users.dat
+posts.dat
+follows.dat
+close_friends.dat
+notifications.dat
+counters.dat
+*_gui.dat
+
+# IDE and editor files
+.vscode/
+.vs/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Package files
+*.zip
+*.tar.gz
+*.rar
+
+# Media files (if large)
+media/
+uploads/
+
+# Node modules (if any web dependencies added later)
+node_modules/
+npm-debug.log*
+
+# Build directories
+build/
+dist/
