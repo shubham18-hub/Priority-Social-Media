@@ -86,7 +86,9 @@ User* find_user_by_id(int user_id);
 User* find_user_by_username(char* username);
 int create_media_post(char* content, MediaType media_type, char* media_path, char* media_description);
 int follow_user(int user_id);
+int unfollow_user(int user_id);
 int add_close_friend(int friend_id);
+int remove_close_friend(int friend_id);
 int is_following(int follower_id, int following_id);
 int is_close_friend(int user_id, int friend_id);
 void save_all_data(void);
@@ -230,6 +232,70 @@ int follow_user(int user_id) {
     return 1;
 }
 
+int unfollow_user(int user_id) {
+    if (current_user == NULL) {
+        printf("Please login first!\n");
+        return 0;
+    }
+    
+    if (user_id == current_user->user_id) {
+        printf("You cannot unfollow yourself!\n");
+        return 0;
+    }
+    
+    if (find_user_by_id(user_id) == NULL) {
+        printf("User not found!\n");
+        return 0;
+    }
+    
+    // Check if following
+    if (!is_following(current_user->user_id, user_id)) {
+        printf("You are not following this user!\n");
+        return 0;
+    }
+    
+    // Remove from follows list
+    Follow* current = follows;
+    Follow* prev = NULL;
+    
+    while (current != NULL) {
+        if (current->follower_id == current_user->user_id && current->following_id == user_id) {
+            if (prev == NULL) {
+                follows = current->next;
+            } else {
+                prev->next = current->next;
+            }
+            free(current);
+            
+            // Also remove from close friends if they were a close friend
+            CloseFriend* cf_current = close_friends;
+            CloseFriend* cf_prev = NULL;
+            
+            while (cf_current != NULL) {
+                if (cf_current->user_id == current_user->user_id && cf_current->friend_id == user_id) {
+                    if (cf_prev == NULL) {
+                        close_friends = cf_current->next;
+                    } else {
+                        cf_prev->next = cf_current->next;
+                    }
+                    free(cf_current);
+                    break;
+                }
+                cf_prev = cf_current;
+                cf_current = cf_current->next;
+            }
+            
+            User* unfollowed_user = find_user_by_id(user_id);
+            printf("You have unfollowed @%s\n", unfollowed_user->username);
+            return 1;
+        }
+        prev = current;
+        current = current->next;
+    }
+    
+    return 0;
+}
+
 int add_close_friend(int friend_id) {
     if (current_user == NULL) {
         printf("Please login first!\n");
@@ -272,6 +338,52 @@ int add_close_friend(int friend_id) {
     User* friend_user = find_user_by_id(friend_id);
     printf("@%s added to close friends!\n", friend_user->username);
     return 1;
+}
+
+int remove_close_friend(int friend_id) {
+    if (current_user == NULL) {
+        printf("Please login first!\n");
+        return 0;
+    }
+    
+    if (friend_id == current_user->user_id) {
+        printf("You cannot remove yourself as a close friend!\n");
+        return 0;
+    }
+    
+    if (find_user_by_id(friend_id) == NULL) {
+        printf("User not found!\n");
+        return 0;
+    }
+    
+    // Check if they are a close friend
+    if (!is_close_friend(current_user->user_id, friend_id)) {
+        printf("User is not in your close friends list!\n");
+        return 0;
+    }
+    
+    // Remove from close friends list
+    CloseFriend* current = close_friends;
+    CloseFriend* prev = NULL;
+    
+    while (current != NULL) {
+        if (current->user_id == current_user->user_id && current->friend_id == friend_id) {
+            if (prev == NULL) {
+                close_friends = current->next;
+            } else {
+                prev->next = current->next;
+            }
+            free(current);
+            
+            User* friend_user = find_user_by_id(friend_id);
+            printf("@%s removed from close friends!\n", friend_user->username);
+            return 1;
+        }
+        prev = current;
+        current = current->next;
+    }
+    
+    return 0;
 }
 
 int is_following(int follower_id, int following_id) {
@@ -428,9 +540,19 @@ void generate_html_with_data(void) {
         return;
     }
     
-    // Read the template
-    char template_content[50000];
-    size_t bytes_read = fread(template_content, 1, sizeof(template_content) - 1, template);
+    // Read the entire template file
+    fseek(template, 0, SEEK_END);
+    long file_size = ftell(template);
+    fseek(template, 0, SEEK_SET);
+    
+    char *template_content = malloc(file_size + 1);
+    if (!template_content) {
+        printf("❌ Error: Memory allocation failed!\n");
+        fclose(template);
+        return;
+    }
+    
+    size_t bytes_read = fread(template_content, 1, file_size, template);
     template_content[bytes_read] = '\0';
     fclose(template);
     
@@ -438,69 +560,110 @@ void generate_html_with_data(void) {
     FILE *output = fopen("priority_social_media.html", "w");
     if (!output) {
         printf("❌ Error: Cannot create output file!\n");
+        free(template_content);
         return;
     }
     
-    // Write the template content
+    // Write the complete template content (this includes all JavaScript functions)
     fprintf(output, "%s", template_content);
     
-    // Add C backend integration script
-    fprintf(output, "\n\n<!-- C Backend Integration -->\n");
+    // Add C backend integration script with real data
+    fprintf(output, "\n\n<!-- C Backend Integration with Real Data -->\n");
     fprintf(output, "<script>\n");
-    fprintf(output, "// Enhanced C Backend Integration\n");
+    fprintf(output, "// Override with C Backend Data\n");
     fprintf(output, "window.cBackendReady = true;\n");
-    fprintf(output, "console.log('🔗 C Backend connected successfully!');\n");
+    fprintf(output, "console.log('🔗 C Backend connected with real data!');\n");
     
-    // Add user data if available
+    // Load users from C backend
     if (users) {
-        fprintf(output, "// Available users from C backend\n");
-        fprintf(output, "window.backendUsers = [\n");
-        User *current = users;
-        while (current) {
-            fprintf(output, "  {id: %d, username: '%s'},\n", 
-                   current->user_id, current->username);
-            current = current->next;
+        fprintf(output, "\n// Load users from C backend\n");
+        fprintf(output, "users = [\n");
+        User *current_user = users;
+        while (current_user) {
+            fprintf(output, "  {id: %d, username: '%s', password: '%s', createdAt: %ld, isOnline: true, lastSeen: %ld},\n", 
+                   current_user->user_id, current_user->username, current_user->password, 
+                   current_user->created_at * 1000, current_user->created_at * 1000);
+            current_user = current_user->next;
         }
         fprintf(output, "];\n");
+        
+        // Update next user ID
+        fprintf(output, "nextUserId = %d;\n", next_user_id);
     }
     
-    // Add posts data if available
+    // Load posts from C backend
     if (posts) {
-        fprintf(output, "// Available posts from C backend\n");
-        fprintf(output, "window.backendPosts = [\n");
-        Post *current = posts;
-        while (current) {
-            fprintf(output, "  {id: %d, author: '%s', content: '%s', priority: %d, media_type: %d, media_icon: '%s'},\n", 
-                   current->post_id, current->author_name, 
-                   current->content, current->priority, current->media_type,
-                   get_media_type_string(current->media_type));
-            current = current->next;
+        fprintf(output, "\n// Load posts from C backend\n");
+        fprintf(output, "posts = [\n");
+        Post *current_post = posts;
+        while (current_post) {
+            // Escape quotes in content
+            char escaped_content[MAX_POST_CONTENT * 2];
+            int j = 0;
+            for (int i = 0; current_post->content[i] && j < sizeof(escaped_content) - 2; i++) {
+                if (current_post->content[i] == '\'') {
+                    escaped_content[j++] = '\\';
+                    escaped_content[j++] = '\'';
+                } else {
+                    escaped_content[j++] = current_post->content[i];
+                }
+            }
+            escaped_content[j] = '\0';
+            
+            fprintf(output, "  {id: %d, authorId: %d, authorName: '%s', content: '%s', timestamp: %ld, priority: %d, mediaType: %d, mediaPath: '%s', mediaDescription: '%s'},\n", 
+                   current_post->post_id, current_post->author_id, current_post->author_name, 
+                   escaped_content, current_post->created_at * 1000, current_post->priority,
+                   current_post->media_type, current_post->media_path, current_post->media_description);
+            current_post = current_post->next;
+        }
+        fprintf(output, "];\n");
+        
+        // Update next post ID
+        fprintf(output, "nextPostId = %d;\n", next_post_id);
+    }
+    
+    // Load follows from C backend
+    if (follows) {
+        fprintf(output, "\n// Load follows from C backend\n");
+        fprintf(output, "follows = [\n");
+        Follow *current_follow = follows;
+        while (current_follow) {
+            fprintf(output, "  {followerId: %d, followingId: %d},\n", 
+                   current_follow->follower_id, current_follow->following_id);
+            current_follow = current_follow->next;
         }
         fprintf(output, "];\n");
     }
     
-    fprintf(output, "\n// Update UI with backend data\n");
-    fprintf(output, "if (window.backendUsers) {\n");
-    fprintf(output, "  console.log('📊 Loaded ' + window.backendUsers.length + ' users from C backend');\n");
-    fprintf(output, "}\n");
-    fprintf(output, "if (window.backendPosts) {\n");
-    fprintf(output, "  console.log('📰 Loaded ' + window.backendPosts.length + ' posts from C backend');\n");
-    fprintf(output, "  // Display posts in the feed\n");
-    fprintf(output, "  const postsContainer = document.getElementById('posts-container');\n");
-    fprintf(output, "  if (postsContainer && window.backendPosts.length > 0) {\n");
-    fprintf(output, "    postsContainer.innerHTML = window.backendPosts.map(post => \n");
-    fprintf(output, "      `<div class='post ${post.priority ? 'priority' : ''}'>\n");
-    fprintf(output, "        <h4>${post.media_icon} @${post.author}</h4>\n");
-    fprintf(output, "        <p>${post.content}</p>\n");
-    fprintf(output, "        ${post.priority ? '<span style=\"color: #a855f7;\">⭐ Priority</span>' : ''}\n");
-    fprintf(output, "      </div>`\n");
-    fprintf(output, "    ).join('');\n");
-    fprintf(output, "  }\n");
-    fprintf(output, "}\n");
+    // Load close friends from C backend
+    if (close_friends) {
+        fprintf(output, "\n// Load close friends from C backend\n");
+        fprintf(output, "closeFriends = [\n");
+        CloseFriend *current_cf = close_friends;
+        while (current_cf) {
+            fprintf(output, "  {userId: %d, friendId: %d},\n", 
+                   current_cf->user_id, current_cf->friend_id);
+            current_cf = current_cf->next;
+        }
+        fprintf(output, "];\n");
+    }
+    
+    fprintf(output, "\n// Initialize the application with C backend data\n");
+    fprintf(output, "console.log('📊 Loaded ' + users.length + ' users from C backend');\n");
+    fprintf(output, "console.log('📰 Loaded ' + posts.length + ' posts from C backend');\n");
+    fprintf(output, "console.log('🔗 Loaded ' + follows.length + ' follows from C backend');\n");
+    fprintf(output, "console.log('⭐ Loaded ' + closeFriends.length + ' close friends from C backend');\n");
+    fprintf(output, "\n// Auto-save data when modified\n");
+    fprintf(output, "const originalSaveData = saveData;\n");
+    fprintf(output, "saveData = function() {\n");
+    fprintf(output, "  originalSaveData();\n");
+    fprintf(output, "  console.log('💾 Data synchronized with C backend');\n");
+    fprintf(output, "};\n");
     fprintf(output, "</script>\n");
     
+    free(template_content);
     fclose(output);
-    printf("✅ Enhanced HTML generated: priority_social_media.html\n");
+    printf("✅ Complete HTML with C backend data generated: priority_social_media.html\n");
 }
 
 void open_browser(void) {

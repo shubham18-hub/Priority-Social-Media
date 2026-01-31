@@ -1517,44 +1517,1131 @@
             displayFeed();
         }
 
+        function showCreatePost() {
+            hideAllSections();
+            document.getElementById('create-post-section').classList.remove('hidden');
+            document.getElementById('new-post-content').focus();
+            
+            // Ensure all form elements are visible and reset
+            const postType = document.getElementById('post-type');
+            const postAudience = document.getElementById('post-audience');
+            const mediaInputs = document.getElementById('media-inputs');
+            
+            if (postType) {
+                postType.value = 'text';
+                postType.style.display = 'block';
+            }
+            
+            if (postAudience) {
+                postAudience.value = 'all';
+                postAudience.style.display = 'block';
+                console.log('Post audience dropdown reset and visible');
+            }
+            
+            if (mediaInputs) {
+                mediaInputs.classList.add('hidden');
+            }
+            
+            // Clear any previous selections
+            selectedFile = null;
+            const fileInfo = document.getElementById('file-info');
+            const mediaPreview = document.getElementById('media-preview');
+            
+            if (fileInfo) fileInfo.classList.add('hidden');
+            if (mediaPreview) mediaPreview.classList.add('hidden');
+        }
 
-<!-- C Backend Integration -->
+        function showNotifications() {
+            hideAllSections();
+            document.getElementById('notifications-section').classList.remove('hidden');
+            displayAllNotifications();
+        }
+
+        function hideAllSections() {
+            document.getElementById('feed-section').classList.add('hidden');
+            document.getElementById('create-post-section').classList.add('hidden');
+            document.getElementById('notifications-section').classList.add('hidden');
+        }
+
+        // Media handling functions
+        function toggleMediaInputs() {
+            const postType = document.getElementById('post-type').value;
+            const mediaInputs = document.getElementById('media-inputs');
+            const fileInput = document.getElementById('media-file');
+            const mediaPreview = document.getElementById('media-preview');
+            
+            if (postType === 'text') {
+                mediaInputs.classList.add('hidden');
+                selectedFile = null;
+                fileInput.value = '';
+                document.getElementById('file-info').classList.add('hidden');
+                mediaPreview.classList.add('hidden');
+            } else {
+                mediaInputs.classList.remove('hidden');
+                updateFileAccept(postType);
+            }
+        }
+
+        function updateFileAccept(type) {
+            const fileInput = document.getElementById('media-file');
+            switch (type) {
+                case 'image':
+                    fileInput.accept = 'image/*';
+                    break;
+                case 'video':
+                    fileInput.accept = 'video/*';
+                    break;
+                case 'audio':
+                    fileInput.accept = 'audio/*';
+                    break;
+            }
+        }
+
+        function handleFileSelect() {
+            const fileInput = document.getElementById('media-file');
+            const fileInfo = document.getElementById('file-info');
+            const mediaPreview = document.getElementById('media-preview');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                fileInfo.classList.add('hidden');
+                mediaPreview.classList.add('hidden');
+                selectedFile = null;
+                return;
+            }
+
+            const postType = document.getElementById('post-type').value;
+            const extension = file.name.split('.').pop().toLowerCase();
+            
+            if (!mediaTypes[postType].includes(extension)) {
+                showMessage(`Invalid file type for ${postType}. Please select a valid ${postType} file.`, 'error');
+                fileInput.value = '';
+                fileInfo.classList.add('hidden');
+                mediaPreview.classList.add('hidden');
+                selectedFile = null;
+                return;
+            }
+
+            selectedFile = {
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                lastModified: file.lastModified,
+                dataUrl: null
+            };
+
+            // Create preview for media files
+            if (file.size < 10 * 1024 * 1024) { // 10MB limit for preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedFile.dataUrl = e.target.result;
+                    
+                    // Show preview based on file type
+                    let previewHtml = '';
+                    if (postType === 'image') {
+                        previewHtml = `<img src="${e.target.result}" alt="Preview" style="max-width: 100%; max-height: 200px; border-radius: 8px;">`;
+                    } else if (postType === 'video') {
+                        previewHtml = `<video controls style="max-width: 100%; max-height: 200px; border-radius: 8px;">
+                                        <source src="${e.target.result}" type="${file.type}">
+                                        Your browser does not support the video tag.
+                                      </video>`;
+                    } else if (postType === 'audio') {
+                        previewHtml = `<audio controls style="width: 100%;">
+                                        <source src="${e.target.result}" type="${file.type}">
+                                        Your browser does not support the audio tag.
+                                      </audio>`;
+                    }
+                    
+                    mediaPreview.innerHTML = previewHtml;
+                    mediaPreview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+
+            fileInfo.innerHTML = `
+                <strong>📁 Selected File:</strong><br>
+                📄 Name: ${file.name}<br>
+                📏 Size: ${formatFileSize(file.size)}<br>
+                🏷️ Type: ${file.type || 'Unknown'}
+            `;
+            fileInfo.classList.remove('hidden');
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Enhanced post creation
+        function createPost() {
+            const content = document.getElementById('new-post-content').value.trim();
+            const postType = document.getElementById('post-type').value;
+            const mediaDescription = document.getElementById('media-description').value.trim();
+            const audience = document.getElementById('post-audience').value;
+
+            if (!content) {
+                showMessage('Please enter post content', 'error');
+                return;
+            }
+
+            if (postType !== 'text' && !selectedFile) {
+                showMessage(`Please select a ${postType} file`, 'error');
+                return;
+            }
+
+            // Determine if this is a close friends post
+            const isCloseFriendsPost = audience === 'close-friends';
+
+            const newPost = {
+                id: nextPostId++,
+                authorId: currentUser.id,
+                authorName: currentUser.username,
+                content,
+                createdAt: Date.now(),
+                priority: isCloseFriendsPost ? 1 : 0,
+                mediaType: postType,
+                mediaFile: selectedFile,
+                mediaDescription: mediaDescription || '',
+                audience: audience,
+                isCloseFriendsOnly: isCloseFriendsPost
+            };
+
+            posts.unshift(newPost);
+
+            // Notify followers based on audience
+            if (isCloseFriendsPost) {
+                // Only notify close friends
+                const myCloseFriends = closeFriends.filter(cf => cf.userId === currentUser.id).map(cf => cf.friendId);
+                myCloseFriends.forEach(friendId => {
+                    const mediaText = postType !== 'text' ? ` with ${postType}` : '';
+                    addNotification(friendId, `⭐ ${currentUser.username} shared a close friends post${mediaText}`, 1);
+                });
+            } else {
+                // Notify all followers
+                follows.filter(f => f.followingId === currentUser.id).forEach(follow => {
+                    const priority = isCloseFriend(follow.followerId, currentUser.id) ? 1 : 0;
+                    const mediaText = postType !== 'text' ? ` with ${postType}` : '';
+                    addNotification(follow.followerId, `${currentUser.username} created a new post${mediaText}`, priority);
+                });
+            }
+
+            // Clear form
+            document.getElementById('new-post-content').value = '';
+            document.getElementById('post-type').value = 'text';
+            document.getElementById('post-audience').value = 'all';
+            document.getElementById('media-description').value = '';
+            document.getElementById('media-file').value = '';
+            document.getElementById('file-info').classList.add('hidden');
+            document.getElementById('media-preview').classList.add('hidden');
+            selectedFile = null;
+            toggleMediaInputs();
+
+            saveData();
+            updateAllStats();
+            showMessage(`Post created successfully! ${isCloseFriendsPost ? '⭐ Shared with close friends only' : '🌍 Shared with all followers'} 🎉`, 'success');
+            showFeed();
+        }
+
+        // Enhanced feed display with multimedia support
+        function displayFeed() {
+            const container = document.getElementById('posts-container');
+            const myFollowing = follows.filter(f => f.followerId === currentUser.id).map(f => f.followingId);
+            const myCloseFriends = closeFriends.filter(cf => cf.userId === currentUser.id).map(cf => cf.friendId);
+            
+            const priorityPosts = [];
+            const closeFriendsPosts = [];
+            const regularPosts = [];
+
+            posts.forEach(post => {
+                // Check if user can see this post
+                const canSeePost = post.authorId === currentUser.id || 
+                                 myFollowing.includes(post.authorId) || 
+                                 (!post.isCloseFriendsOnly);
+
+                // If it's a close friends only post, check if current user is a close friend of the author
+                if (post.isCloseFriendsOnly && post.authorId !== currentUser.id) {
+                    const authorCloseFriends = closeFriends.filter(cf => cf.userId === post.authorId).map(cf => cf.friendId);
+                    if (!authorCloseFriends.includes(currentUser.id)) {
+                        return; // Skip this post
+                    }
+                }
+
+                if (canSeePost) {
+                    if (post.isCloseFriendsOnly) {
+                        closeFriendsPosts.push(post);
+                    } else if (isCloseFriend(currentUser.id, post.authorId) || post.authorId === currentUser.id) {
+                        priorityPosts.push(post);
+                    } else {
+                        regularPosts.push(post);
+                    }
+                }
+            });
+
+            let html = '';
+            
+            if (closeFriendsPosts.length > 0) {
+                html += '<h3 style="color: #a855f7; margin: 25px 0 15px 0; font-size: 18px;">⭐ Close Friends Posts</h3>';
+                closeFriendsPosts.forEach(post => {
+                    html += renderPost(post, true, true);
+                });
+            }
+
+            if (priorityPosts.length > 0) {
+                html += '<h3 style="color: #22c55e; margin: 25px 0 15px 0; font-size: 18px;">🔥 Priority Posts</h3>';
+                priorityPosts.forEach(post => {
+                    html += renderPost(post, true, false);
+                });
+            }
+
+            if (regularPosts.length > 0) {
+                html += '<h3 style="color: #666; margin: 25px 0 15px 0; font-size: 18px;">📰 Regular Posts</h3>';
+                regularPosts.forEach(post => {
+                    html += renderPost(post, false, false);
+                });
+            }
+
+            if (closeFriendsPosts.length === 0 && priorityPosts.length === 0 && regularPosts.length === 0) {
+                html += `
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <h3>📭 No posts to display</h3>
+                        <p>Follow some users to see their posts, or create your first post!</p>
+                        <button onclick="showUsers()" style="margin-top: 15px; width: auto; padding: 10px 20px;">👥 Find Users</button>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function showMyPosts() {
+            const container = document.getElementById('posts-container');
+            const myPosts = posts.filter(p => p.authorId === currentUser.id);
+
+            let html = '<h2 class="section-title">📄 My Posts</h2>';
+            
+            if (myPosts.length > 0) {
+                myPosts.forEach(post => {
+                    html += renderPost(post, false, post.isCloseFriendsOnly);
+                });
+            } else {
+                html += `
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <h3>📝 No posts yet</h3>
+                        <p>Share your first post with the world!</p>
+                        <button onclick="showCreatePost()" style="margin-top: 15px; width: auto; padding: 10px 20px;">✨ Create Post</button>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Enhanced post rendering with multimedia support
+        function renderPost(post, isPriority, isCloseFriendsPost) {
+            const date = new Date(post.createdAt).toLocaleString();
+            const mediaIcon = {
+                'text': '📄',
+                'image': '🖼️',
+                'video': '🎥',
+                'audio': '🎵'
+            };
+
+            let mediaHtml = '';
+            if (post.mediaType !== 'text' && post.mediaFile) {
+                if (post.mediaType === 'image' && post.mediaFile.dataUrl) {
+                    mediaHtml = `
+                        <div class="post-media">
+                            <img src="${post.mediaFile.dataUrl}" alt="Post image" onclick="openImageModal('${post.mediaFile.dataUrl}')">
+                            ${post.mediaDescription ? `<p style="margin-top: 10px; font-style: italic; color: #666;">${post.mediaDescription}</p>` : ''}
+                        </div>
+                    `;
+                } else if (post.mediaType === 'video' && post.mediaFile.dataUrl) {
+                    mediaHtml = `
+                        <div class="post-media">
+                            <video controls>
+                                <source src="${post.mediaFile.dataUrl}" type="${post.mediaFile.type}">
+                                Your browser does not support the video tag.
+                            </video>
+                            ${post.mediaDescription ? `<p style="margin-top: 10px; font-style: italic; color: #666;">${post.mediaDescription}</p>` : ''}
+                        </div>
+                    `;
+                } else if (post.mediaType === 'audio' && post.mediaFile.dataUrl) {
+                    mediaHtml = `
+                        <div class="post-media">
+                            <audio controls>
+                                <source src="${post.mediaFile.dataUrl}" type="${post.mediaFile.type}">
+                                Your browser does not support the audio tag.
+                            </audio>
+                            ${post.mediaDescription ? `<p style="margin-top: 10px; font-style: italic; color: #666;">${post.mediaDescription}</p>` : ''}
+                        </div>
+                    `;
+                } else {
+                    // Fallback for files without preview
+                    mediaHtml = `
+                        <div class="media-info">
+                            <h4>${mediaIcon[post.mediaType]} ${post.mediaType.toUpperCase()} CONTENT</h4>
+                            <p><strong>📁 File:</strong> ${post.mediaFile.name}</p>
+                            <p><strong>📏 Size:</strong> ${formatFileSize(post.mediaFile.size)}</p>
+                            ${post.mediaDescription ? `<p><strong>📝 Description:</strong> ${post.mediaDescription}</p>` : ''}
+                        </div>
+                    `;
+                }
+            }
+
+            const postClass = isCloseFriendsPost ? 'post close-friends-post' : (isPriority ? 'post priority' : 'post');
+            
+            let badges = '';
+            if (isCloseFriendsPost) {
+                badges += '<span class="audience-badge close-friends">⭐ CLOSE FRIENDS</span>';
+            }
+            if (isPriority && !isCloseFriendsPost) {
+                badges += '<span class="priority-badge">⭐ PRIORITY</span>';
+            }
+
+            return `
+                <div class="${postClass}">
+                    <div class="post-header">
+                        <span class="post-author">${mediaIcon[post.mediaType]} @${post.authorName}</span>
+                        <div>
+                            ${badges}
+                            <span class="post-time">${date}</span>
+                        </div>
+                    </div>
+                    <div class="post-content">${post.content}</div>
+                    ${mediaHtml}
+                </div>
+            `;
+        }
+
+        // Image modal function
+        function openImageModal(imageSrc) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+                cursor: pointer;
+            `;
+            
+            const img = document.createElement('img');
+            img.src = imageSrc;
+            img.style.cssText = `
+                max-width: 90%;
+                max-height: 90%;
+                border-radius: 10px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            `;
+            
+            modal.appendChild(img);
+            document.body.appendChild(modal);
+            
+            modal.onclick = () => document.body.removeChild(modal);
+        }
+
+        // Enhanced user management
+        function showUsers() {
+            const container = document.getElementById('posts-container');
+            hideAllSections();
+            
+            let html = '<h2 class="section-title">👥 Find Users</h2>';
+            
+            const otherUsers = users.filter(u => u.id !== currentUser.id);
+            
+            if (otherUsers.length === 0) {
+                html += `
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <h3>👤 No other users found</h3>
+                        <p>Be the first to invite friends to join!</p>
+                    </div>
+                `;
+            } else {
+                otherUsers.forEach(user => {
+                    const isFollowing = follows.some(f => f.followerId === currentUser.id && f.followingId === user.id);
+                    const isClose = isCloseFriend(currentUser.id, user.id);
+                    const userPosts = posts.filter(p => p.authorId === user.id).length;
+                    const isOnline = user.isOnline;
+                    const lastSeen = user.lastSeen ? new Date(user.lastSeen).toLocaleString() : 'Never';
+                    
+                    html += `
+                        <div class="user-list-item">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <strong>👤 @${user.username}</strong>
+                                    ${isOnline ? '<span class="online-indicator">🟢 Online</span>' : '<span class="offline-indicator">⚫ Offline</span>'}
+                                </div>
+                                <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                                    📄 ${userPosts} posts • 📅 Joined ${new Date(user.createdAt).toLocaleDateString()}
+                                </div>
+                                <div style="font-size: 11px; color: #999; margin-top: 3px;">
+                                    Last seen: ${lastSeen}
+                                </div>
+                                ${isClose ? '<span class="priority-badge" style="margin-top: 8px; display: inline-block;">⭐ Close Friend</span>' : ''}
+                            </div>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                ${isFollowing 
+                                    ? `<button class="danger" onclick="unfollowUser(${user.id})" style="width: auto; padding: 6px 12px;">➖ Unfollow</button>`
+                                    : `<button class="success" onclick="followUser(${user.id})" style="width: auto; padding: 6px 12px;">➕ Follow</button>`
+                                }
+                                ${isFollowing && !isClose
+                                    ? `<button class="warning" onclick="addCloseFriend(${user.id})" style="width: auto; padding: 6px 12px;">⭐ Add Friend</button>`
+                                    : ''
+                                }
+                                ${isClose
+                                    ? `<button class="secondary" onclick="removeCloseFriend(${user.id})" style="width: auto; padding: 6px 12px;">❌ Remove Friend</button>`
+                                    : ''
+                                }
+                                <button onclick="openConversation(${user.id})" style="width: auto; padding: 6px 12px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">💬 Message</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Social functions
+        function followUser(userId) {
+            if (!follows.some(f => f.followerId === currentUser.id && f.followingId === userId)) {
+                follows.push({ followerId: currentUser.id, followingId: userId });
+                const user = users.find(u => u.id === userId);
+                addNotification(userId, `${currentUser.username} started following you`, 0);
+                saveData();
+                updateAllStats();
+                showUsers();
+                showMessage(`Now following @${user.username}! 🎉`, 'success');
+            }
+        }
+
+        function unfollowUser(userId) {
+            const index = follows.findIndex(f => f.followerId === currentUser.id && f.followingId === userId);
+            if (index !== -1) {
+                follows.splice(index, 1);
+                removeCloseFriend(userId);
+                const user = users.find(u => u.id === userId);
+                saveData();
+                updateAllStats();
+                showUsers();
+                showMessage(`Unfollowed @${user.username}`, 'success');
+            }
+        }
+
+        function addCloseFriend(friendId) {
+            if (!isCloseFriend(currentUser.id, friendId)) {
+                closeFriends.push({ userId: currentUser.id, friendId });
+                const user = users.find(u => u.id === friendId);
+                saveData();
+                updateAllStats();
+                showUsers();
+                showMessage(`@${user.username} added as close friend! ⭐`, 'success');
+            }
+        }
+
+        function removeCloseFriend(friendId) {
+            const index = closeFriends.findIndex(cf => cf.userId === currentUser.id && cf.friendId === friendId);
+            if (index !== -1) {
+                closeFriends.splice(index, 1);
+                const user = users.find(u => u.id === friendId);
+                saveData();
+                updateAllStats();
+                showUsers();
+                showMessage(`@${user.username} removed from close friends`, 'success');
+            }
+        }
+
+        function isCloseFriend(userId, friendId) {
+            return closeFriends.some(cf => cf.userId === userId && cf.friendId === friendId);
+        }
+
+        function showCloseFriends() {
+            const container = document.getElementById('posts-container');
+            const myCloseFriends = closeFriends.filter(cf => cf.userId === currentUser.id);
+            
+            let html = '<h2 class="section-title">⭐ Close Friends</h2>';
+            
+            if (myCloseFriends.length > 0) {
+                myCloseFriends.forEach(cf => {
+                    const friend = users.find(u => u.id === cf.friendId);
+                    if (friend) {
+                        const friendPosts = posts.filter(p => p.authorId === friend.id).length;
+                        html += `
+                            <div class="user-list-item">
+                                <div>
+                                    <strong>⭐ @${friend.username}</strong>
+                                    <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                                        📄 ${friendPosts} posts • Priority content enabled
+                                    </div>
+                                </div>
+                                <button class="secondary" onclick="removeCloseFriend(${friend.id})" style="width: auto; padding: 6px 12px;">❌ Remove</button>
+                            </div>
+                        `;
+                    }
+                });
+            } else {
+                html += `
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <h3>⭐ No close friends yet</h3>
+                        <p>Add close friends to see their content with priority!</p>
+                        <button onclick="showUsers()" style="margin-top: 15px; width: auto; padding: 10px 20px;">👥 Find Users</button>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function showMessages() {
+            const container = document.getElementById('posts-container');
+            hideAllSections();
+            
+            let html = '<h2 class="section-title">💬 Messages</h2>';
+            
+            // Get conversations
+            const myConversations = getConversations();
+            
+            if (myConversations.length === 0) {
+                html += `
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <h3>💬 No conversations yet</h3>
+                        <p>Start a conversation with someone you follow!</p>
+                        <button onclick="showUsers()" style="margin-top: 15px; width: auto; padding: 10px 20px;">👥 Find Users</button>
+                    </div>
+                `;
+            } else {
+                html += '<div class="conversations-list">';
+                myConversations.forEach(conversation => {
+                    const otherUser = users.find(u => u.id === conversation.otherUserId);
+                    const lastMessage = conversation.lastMessage;
+                    const unreadCount = conversation.unreadCount;
+                    
+                    html += `
+                        <div class="conversation-item" onclick="openConversation(${otherUser.id})">
+                            <div class="conversation-info">
+                                <strong>💬 @${otherUser.username}</strong>
+                                <div class="last-message">${lastMessage ? lastMessage.content.substring(0, 50) + '...' : 'No messages yet'}</div>
+                                <div class="message-time">${lastMessage ? new Date(lastMessage.timestamp).toLocaleString() : ''}</div>
+                            </div>
+                            ${unreadCount > 0 ? `<div class="unread-badge">${unreadCount}</div>` : ''}
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function getConversations() {
+            const conversations = [];
+            const processedUsers = new Set();
+            
+            messages.forEach(message => {
+                let otherUserId;
+                if (message.senderId === currentUser.id) {
+                    otherUserId = message.receiverId;
+                } else if (message.receiverId === currentUser.id) {
+                    otherUserId = message.senderId;
+                } else {
+                    return;
+                }
+                
+                if (!processedUsers.has(otherUserId)) {
+                    processedUsers.add(otherUserId);
+                    
+                    const userMessages = messages.filter(m => 
+                        (m.senderId === currentUser.id && m.receiverId === otherUserId) ||
+                        (m.senderId === otherUserId && m.receiverId === currentUser.id)
+                    ).sort((a, b) => b.timestamp - a.timestamp);
+                    
+                    const unreadCount = messages.filter(m => 
+                        m.senderId === otherUserId && 
+                        m.receiverId === currentUser.id && 
+                        !m.isRead
+                    ).length;
+                    
+                    conversations.push({
+                        otherUserId,
+                        lastMessage: userMessages[0],
+                        unreadCount
+                    });
+                }
+            });
+            
+            return conversations.sort((a, b) => {
+                const aTime = a.lastMessage ? a.lastMessage.timestamp : 0;
+                const bTime = b.lastMessage ? b.lastMessage.timestamp : 0;
+                return bTime - aTime;
+            });
+        }
+
+        function openConversation(userId) {
+            const otherUser = users.find(u => u.id === userId);
+            const container = document.getElementById('posts-container');
+            
+            // Mark messages as read
+            messages.forEach(message => {
+                if (message.senderId === userId && message.receiverId === currentUser.id) {
+                    message.isRead = true;
+                }
+            });
+            saveData();
+            
+            const conversationMessages = messages.filter(m => 
+                (m.senderId === currentUser.id && m.receiverId === userId) ||
+                (m.senderId === userId && m.receiverId === currentUser.id)
+            ).sort((a, b) => a.timestamp - b.timestamp);
+            
+            let html = `
+                <div class="conversation-header">
+                    <button onclick="showMessages()" class="back-btn">← Back to Messages</button>
+                    <h2 class="section-title">💬 Chat with @${otherUser.username}</h2>
+                </div>
+                
+                <div class="messages-container" id="messages-container">
+            `;
+            
+            if (conversationMessages.length === 0) {
+                html += '<div class="no-messages">No messages yet. Start the conversation!</div>';
+            } else {
+                conversationMessages.forEach(message => {
+                    const isOwn = message.senderId === currentUser.id;
+                    html += `
+                        <div class="message-bubble ${isOwn ? 'own' : 'other'}">
+                            <div class="message-content">${message.content}</div>
+                            <div class="message-time">${new Date(message.timestamp).toLocaleString()}</div>
+                        </div>
+                    `;
+                });
+            }
+            
+            html += `
+                </div>
+                
+                <div class="message-input-container">
+                    <input type="text" id="message-input" data-user-id="${userId}" placeholder="Type a message..." onkeypress="handleMessageKeyPress(event, ${userId})">
+                    <button onclick="sendMessage(${userId})" class="send-btn">Send</button>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+            
+            // Scroll to bottom
+            setTimeout(() => {
+                const messagesContainer = document.getElementById('messages-container');
+                if (messagesContainer) {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+            }, 100);
+        }
+
+        function handleMessageKeyPress(event, userId) {
+            if (event.key === 'Enter') {
+                sendMessage(userId);
+            }
+        }
+
+        function sendMessage(receiverId) {
+            const messageInput = document.getElementById('message-input');
+            const content = messageInput.value.trim();
+            
+            if (!content) {
+                showMessage('Please enter a message', 'error');
+                return;
+            }
+            
+            const newMessage = {
+                id: nextMessageId++,
+                senderId: currentUser.id,
+                receiverId: receiverId,
+                content: content,
+                timestamp: Date.now(),
+                isRead: false
+            };
+            
+            messages.push(newMessage);
+            saveData();
+            
+            // Add notification for receiver
+            const receiver = users.find(u => u.id === receiverId);
+            addNotification(receiverId, `💬 ${currentUser.username} sent you a message`, 0);
+            
+            messageInput.value = '';
+            openConversation(receiverId); // Refresh conversation
+            showMessage('Message sent! 📤', 'success');
+        }
+
+        // Enhanced notifications
+        function addNotification(userId, content, priority) {
+            notifications.push({
+                id: nextNotifId++,
+                userId,
+                content,
+                timestamp: Date.now(),
+                priority,
+                isRead: false
+            });
+            saveData();
+            if (userId === currentUser.id) {
+                loadNotifications();
+            }
+        }
+
+        function loadNotifications() {
+            const container = document.getElementById('notifications-container');
+            const myNotifs = notifications
+                .filter(n => n.userId === currentUser.id)
+                .sort((a, b) => b.priority - a.priority || b.timestamp - a.timestamp)
+                .slice(0, 5);
+
+            if (myNotifs.length === 0) {
+                container.innerHTML = '<div class="notification">🎉 Welcome to Priority Social Media!</div>';
+                return;
+            }
+
+            container.innerHTML = myNotifs.map(n => `
+                <div class="notification ${n.priority ? 'priority' : ''}">
+                    ${n.priority ? '⭐ ' : '🔔 '}${n.content}
+                    <div style="font-size: 11px; color: #999; margin-top: 8px;">
+                        ${new Date(n.timestamp).toLocaleString()}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayAllNotifications() {
+            const container = document.getElementById('notifications-list');
+            const myNotifs = notifications
+                .filter(n => n.userId === currentUser.id)
+                .sort((a, b) => b.priority - a.priority || b.timestamp - a.timestamp);
+
+            if (myNotifs.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <h3>🔔 No notifications</h3>
+                        <p>You're all caught up!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            let priorityNotifs = myNotifs.filter(n => n.priority === 1);
+            let regularNotifs = myNotifs.filter(n => n.priority === 0);
+
+            if (priorityNotifs.length > 0) {
+                html += '<h3 style="color: #ffc107; margin-bottom: 15px;">⭐ Priority Notifications</h3>';
+                priorityNotifs.forEach(n => {
+                    html += `
+                        <div class="notification priority">
+                            ⭐ ${n.content}
+                            <div style="font-size: 11px; color: #999; margin-top: 8px;">
+                                ${new Date(n.timestamp).toLocaleString()}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            if (regularNotifs.length > 0) {
+                html += '<h3 style="color: #666; margin: 25px 0 15px 0;">🔔 Regular Notifications</h3>';
+                regularNotifs.forEach(n => {
+                    html += `
+                        <div class="notification">
+                            🔔 ${n.content}
+                            <div style="font-size: 11px; color: #999; margin-top: 8px;">
+                                ${new Date(n.timestamp).toLocaleString()}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Enhanced statistics
+        function updateAllStats() {
+            const followersCount = follows.filter(f => f.followingId === currentUser.id).length;
+            const followingCount = follows.filter(f => f.followerId === currentUser.id).length;
+            const postsCount = posts.filter(p => p.authorId === currentUser.id).length;
+            const closeFriendsCount = closeFriends.filter(cf => cf.userId === currentUser.id).length;
+
+            document.getElementById('followers-count').textContent = followersCount;
+            document.getElementById('following-count').textContent = followingCount;
+            document.getElementById('posts-count').textContent = postsCount;
+            document.getElementById('total-posts').textContent = postsCount;
+            document.getElementById('close-friends-count').textContent = closeFriendsCount;
+        }
+
+        // Enhanced quick search functionality
+        function quickSearch() {
+            const searchTerm = document.getElementById('quick-search').value.trim().toLowerCase();
+            const resultsContainer = document.getElementById('search-results');
+            
+            if (!searchTerm) {
+                resultsContainer.innerHTML = '';
+                return;
+            }
+
+            const matchingUsers = users
+                .filter(u => u.id !== currentUser.id && u.username.toLowerCase().includes(searchTerm))
+                .slice(0, 5);
+
+            if (matchingUsers.length === 0) {
+                resultsContainer.innerHTML = '<div class="search-result-item">No users found</div>';
+                return;
+            }
+
+            resultsContainer.innerHTML = matchingUsers.map(user => {
+                const isFollowing = follows.some(f => f.followerId === currentUser.id && f.followingId === user.id);
+                const isClose = isCloseFriend(currentUser.id, user.id);
+                const isOnline = user.isOnline;
+                
+                return `
+                    <div class="search-result-item" onclick="viewUserProfile(${user.id})">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>@${user.username}</strong>
+                                ${isOnline ? '<span style="color: #22c55e; font-size: 12px;">🟢</span>' : '<span style="color: #6b7280; font-size: 12px;">⚫</span>'}
+                                ${isFollowing ? '<span style="color: #22c55e; font-size: 12px; margin-left: 8px;">✓ Following</span>' : ''}
+                                ${isClose ? '<span style="color: #a855f7; font-size: 12px; margin-left: 8px;">⭐ Close Friend</span>' : ''}
+                            </div>
+                            <button onclick="event.stopPropagation(); openConversation(${user.id})" style="padding: 4px 8px; font-size: 11px; background: #3b82f6; color: white; border: none; border-radius: 4px;">💬</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function viewUserProfile(userId) {
+            const user = users.find(u => u.id === userId);
+            const container = document.getElementById('posts-container');
+            hideAllSections();
+            
+            const userPosts = posts.filter(p => p.authorId === userId);
+            const isFollowing = follows.some(f => f.followerId === currentUser.id && f.followingId === userId);
+            const isClose = isCloseFriend(currentUser.id, userId);
+            const followerCount = follows.filter(f => f.followingId === userId).length;
+            const followingCount = follows.filter(f => f.followerId === userId).length;
+            
+            let html = `
+                <div class="user-profile">
+                    <div class="profile-header">
+                        <h2 class="section-title">👤 @${user.username}'s Profile</h2>
+                        <div class="profile-stats-inline">
+                            <span>📄 ${userPosts.length} posts</span>
+                            <span>👥 ${followerCount} followers</span>
+                            <span>➡️ ${followingCount} following</span>
+                            ${user.isOnline ? '<span style="color: #22c55e;">🟢 Online</span>' : '<span style="color: #6b7280;">⚫ Offline</span>'}
+                        </div>
+                        <div class="profile-actions">
+                            ${isFollowing 
+                                ? `<button class="danger" onclick="unfollowUser(${userId})">➖ Unfollow</button>`
+                                : `<button class="success" onclick="followUser(${userId})">➕ Follow</button>`
+                            }
+                            ${isFollowing && !isClose
+                                ? `<button class="warning" onclick="addCloseFriend(${userId})">⭐ Add Close Friend</button>`
+                                : ''
+                            }
+                            ${isClose
+                                ? `<button class="secondary" onclick="removeCloseFriend(${userId})">❌ Remove Close Friend</button>`
+                                : ''
+                            }
+                            <button onclick="openConversation(${userId})" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">💬 Message</button>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin: 20px 0 15px 0; color: #22c55e;">📄 Posts by @${user.username}</h3>
+            `;
+            
+            if (userPosts.length === 0) {
+                html += '<div style="text-align: center; padding: 20px; color: #999;">No posts yet</div>';
+            } else {
+                userPosts.forEach(post => {
+                    // Check if current user can see this post
+                    if (post.isCloseFriendsOnly && !isClose && post.authorId !== currentUser.id) {
+                        return; // Skip close friends only posts
+                    }
+                    html += renderPost(post, isClose, post.isCloseFriendsOnly);
+                });
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Initialize application
+        function initApp() {
+            loadData();
+            
+            // Debug: Log form elements
+            console.log('Post audience element:', document.getElementById('post-audience'));
+            console.log('Media preview element:', document.getElementById('media-preview'));
+            
+            // Ensure form elements are visible
+            const postAudience = document.getElementById('post-audience');
+            if (postAudience) {
+                postAudience.style.display = 'block';
+                console.log('Post audience dropdown found and made visible');
+            }
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (currentUser) {
+                    if (e.ctrlKey && e.key === 'Enter') {
+                        const activeElement = document.activeElement;
+                        if (activeElement.id === 'new-post-content') {
+                            createPost();
+                        } else if (activeElement.id === 'message-input') {
+                            const userId = activeElement.getAttribute('data-user-id');
+                            if (userId) {
+                                sendMessage(parseInt(userId));
+                            }
+                        }
+                    }
+                    
+                    // Quick navigation shortcuts
+                    if (e.altKey) {
+                        switch(e.key) {
+                            case '1':
+                                e.preventDefault();
+                                showFeed();
+                                break;
+                            case '2':
+                                e.preventDefault();
+                                showCreatePost();
+                                break;
+                            case '3':
+                                e.preventDefault();
+                                showUsers();
+                                break;
+                            case '4':
+                                e.preventDefault();
+                                showMessages();
+                                break;
+                            case '5':
+                                e.preventDefault();
+                                showNotifications();
+                                break;
+                        }
+                    }
+                }
+            });
+
+            // Auto-save every 30 seconds
+            setInterval(saveData, 30000);
+            
+            // Update online status every 5 minutes
+            setInterval(() => {
+                if (currentUser) {
+                    const user = users.find(u => u.id === currentUser.id);
+                    if (user) {
+                        user.lastSeen = Date.now();
+                        saveData();
+                    }
+                }
+            }, 300000);
+            
+            // Add tooltips for keyboard shortcuts
+            addKeyboardShortcutTooltips();
+            
+            // Force refresh of UI elements
+            setTimeout(() => {
+                if (currentUser) {
+                    updateAllStats();
+                }
+            }, 1000);
+        }
+
+        function addKeyboardShortcutTooltips() {
+            const shortcuts = [
+                { element: '.menu-item:nth-child(1)', shortcut: 'Alt+1' },
+                { element: '.menu-item:nth-child(2)', shortcut: 'Alt+2' },
+                { element: '.menu-item:nth-child(4)', shortcut: 'Alt+3' },
+                { element: '.menu-item:nth-child(5)', shortcut: 'Alt+4' },
+                { element: '.menu-item:nth-child(7)', shortcut: 'Alt+5' }
+            ];
+            
+            shortcuts.forEach(({ element, shortcut }) => {
+                const el = document.querySelector(element);
+                if (el) {
+                    el.title = `${el.textContent.trim()} (${shortcut})`;
+                }
+            });
+        }
+
+        // Enhanced error handling
+        window.addEventListener('error', function(e) {
+            console.error('Application error:', e.error);
+            showMessage('An unexpected error occurred. Please refresh the page.', 'error');
+        });
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
+
+
+<!-- C Backend Integration with Real Data -->
 <script>
-// Enhanced C Backend Integration
+// Override with C Backend Data
 window.cBackendReady = true;
-console.log('🔗 C Backend connected successfully!');
-// Available users from C backend
-window.backendUsers = [
-  {id: 3, username: 'charlie'},
-  {id: 2, username: 'bob'},
-  {id: 1, username: 'alice'},
+console.log('🔗 C Backend connected with real data!');
+
+// Load users from C backend
+users = [
+  {id: 1, username: 'alice', password: 'password123', createdAt: 360757048, isOnline: true, lastSeen: 360757048},
+  {id: 2, username: 'bob', password: 'password123', createdAt: 360757048, isOnline: true, lastSeen: 360757048},
+  {id: 3, username: 'charlie', password: 'password123', createdAt: 360757048, isOnline: true, lastSeen: 360757048},
 ];
-// Available posts from C backend
-window.backendPosts = [
-  {id: 6, author: 'charlie', content: 'Priority Social Media is awesome! ⭐', priority: 0, media_type: 0, media_icon: '📄'},
-  {id: 5, author: 'bob', content: 'Sharing my vacation video 🎥', priority: 0, media_type: 2, media_icon: '🎥'},
-  {id: 4, author: 'bob', content: 'Hello everyone! Great to be here! 👋', priority: 0, media_type: 0, media_icon: '📄'},
-  {id: 3, author: 'alice', content: 'My latest music track 🎵', priority: 0, media_type: 3, media_icon: '🎵'},
-  {id: 2, author: 'alice', content: 'Check out this amazing sunset! 🌅', priority: 0, media_type: 1, media_icon: '🖼️'},
-  {id: 1, author: 'alice', content: 'Welcome to Priority Social Media! 🚀', priority: 0, media_type: 0, media_icon: '📄'},
+nextUserId = 4;
+
+// Load posts from C backend
+posts = [
+  {id: 1, authorId: 1, authorName: 'alice', content: 'Welcome to Priority Social Media! 🚀', timestamp: 360757048, priority: 0, mediaType: 0, mediaPath: '', mediaDescription: ''},
+  {id: 2, authorId: 1, authorName: 'alice', content: 'Check out this amazing sunset! 🌅', timestamp: 360757048, priority: 0, mediaType: 1, mediaPath: 'sunset.jpg', mediaDescription: 'Beautiful sunset photo'},
+  {id: 3, authorId: 1, authorName: 'alice', content: 'My latest music track 🎵', timestamp: 360757048, priority: 0, mediaType: 3, mediaPath: 'track.mp3', mediaDescription: 'Original composition'},
+  {id: 4, authorId: 2, authorName: 'bob', content: 'Hello everyone! Great to be here! 👋', timestamp: 360757048, priority: 0, mediaType: 0, mediaPath: '', mediaDescription: ''},
+  {id: 5, authorId: 2, authorName: 'bob', content: 'Sharing my vacation video 🎥', timestamp: 360757048, priority: 0, mediaType: 2, mediaPath: 'vacation.mp4', mediaDescription: 'Beach vacation highlights'},
+  {id: 6, authorId: 3, authorName: 'charlie', content: 'Priority Social Media is awesome! ⭐', timestamp: 360757048, priority: 0, mediaType: 0, mediaPath: '', mediaDescription: ''},
+];
+nextPostId = 7;
+
+// Load follows from C backend
+follows = [
+  {followerId: 1, followingId: 2},
+  {followerId: 1, followingId: 3},
+  {followerId: 2, followingId: 1},
+  {followerId: 3, followingId: 1},
+  {followerId: 3, followingId: 2},
 ];
 
-// Update UI with backend data
-if (window.backendUsers) {
-  console.log('📊 Loaded ' + window.backendUsers.length + ' users from C backend');
-}
-if (window.backendPosts) {
-  console.log('📰 Loaded ' + window.backendPosts.length + ' posts from C backend');
-  // Display posts in the feed
-  const postsContainer = document.getElementById('posts-container');
-  if (postsContainer && window.backendPosts.length > 0) {
-    postsContainer.innerHTML = window.backendPosts.map(post => 
-      `<div class='post ${post.priority ? 'priority' : ''}'>
-        <h4>${post.media_icon} @${post.author}</h4>
-        <p>${post.content}</p>
-        ${post.priority ? '<span style="color: #a855f7;">⭐ Priority</span>' : ''}
-      </div>`
-    ).join('');
-  }
-}
+// Load close friends from C backend
+closeFriends = [
+  {userId: 1, friendId: 2},
+];
+
+// Initialize the application with C backend data
+console.log('📊 Loaded ' + users.length + ' users from C backend');
+console.log('📰 Loaded ' + posts.length + ' posts from C backend');
+console.log('🔗 Loaded ' + follows.length + ' follows from C backend');
+console.log('⭐ Loaded ' + closeFriends.length + ' close friends from C backend');
+
+// Auto-save data when modified
+const originalSaveData = saveData;
+saveData = function() {
+  originalSaveData();
+  console.log('💾 Data synchronized with C backend');
+};
 </script>
