@@ -18,8 +18,8 @@ COPY . .
 # Compile the web server
 RUN gcc -o web_server web_server.c
 
-# Expose port (Render uses PORT environment variable)
-EXPOSE 10000
+# Expose port (Render will set PORT environment variable)
+EXPOSE $PORT
 
 # Run the web server
 CMD ["./web_server"]

@@ -5,7 +5,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#define PORT 10000
 #define BUFFER_SIZE 1024
 
 const char* html_response = 
@@ -49,8 +48,12 @@ int main() {
     int opt = 1;
     int addrlen = sizeof(address);
     char buffer[BUFFER_SIZE] = {0};
+    
+    // Get port from environment variable or use default
+    char* port_str = getenv("PORT");
+    int port = port_str ? atoi(port_str) : 10000;
 
-    printf("Starting Priority Social Media Web Server on port %d\n", PORT);
+    printf("Starting Priority Social Media Web Server on port %d\n", port);
 
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
         perror("socket failed");
@@ -64,7 +67,7 @@ int main() {
 
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(PORT);
+    address.sin_port = htons(port);
 
     if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
         perror("bind failed");
@@ -76,7 +79,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    printf("Server listening on port %d\n", PORT);
+    printf("Server listening on port %d\n", port);
 
     while(1) {
         if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen)) < 0) {

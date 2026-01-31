@@ -1,8 +1,6 @@
 services:
   - type: web
     name: priority-social-media
-    env: docker
+    runtime: docker
     dockerfilePath: ./Dockerfile
     plan: free
-    buildCommand: ""
-    startCommand: ""
