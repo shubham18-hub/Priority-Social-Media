@@ -1,0 +1,13 @@
+{
+  "name": "priority-social-media",
+  "version": "1.0.0",
+  "description": "Priority Social Media Application",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo 'No build step required for C application'"
+  },
+  "keywords": ["social-media", "c", "gtk"],
+  "author": "",
+  "license": "ISC"
+}
