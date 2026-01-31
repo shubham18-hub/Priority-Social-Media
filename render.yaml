@@ -4,3 +4,5 @@ services:
     env: docker
     dockerfilePath: ./Dockerfile
     plan: free
+    buildCommand: ""
+    startCommand: ""

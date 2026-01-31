@@ -1,11 +1,12 @@
 FROM ubuntu:20.04
 
+# Avoid interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
     make \
-    libgtk-3-dev \
-    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
@@ -14,13 +15,11 @@ WORKDIR /app
 # Copy source files
 COPY . .
 
-# Compile the application
-RUN gcc -o social_media_app social_media_complete.c `pkg-config --cflags --libs gtk+-3.0` || \
-    gcc -o social_media_app priority_social_media.c || \
-    gcc -o social_media_app frontend.c
+# Compile the web server
+RUN gcc -o web_server web_server.c
 
-# Expose port (adjust as needed)
-EXPOSE 8080
+# Expose port (Render uses PORT environment variable)
+EXPOSE 10000
 
-# Run the application
-CMD ["./social_media_app"]
+# Run the web server
+CMD ["./web_server"]
