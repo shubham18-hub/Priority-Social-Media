@@ -1,0 +1,3382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Priority Social Media - Working Version</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: 
+                radial-gradient(ellipse at top left, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at top right, rgba(255, 75, 178, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at center right, rgba(17, 153, 142, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at center left, rgba(254, 202, 87, 0.3) 0%, transparent 50%),
+                linear-gradient(135deg, #0f0c29 0%, #302b63 35%, #24243e 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { 
+                background: 
+                    radial-gradient(ellipse at top left, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                    radial-gradient(ellipse at top right, rgba(255, 75, 178, 0.3) 0%, transparent 50%),
+                    radial-gradient(ellipse at center right, rgba(17, 153, 142, 0.3) 0%, transparent 50%),
+                    radial-gradient(ellipse at center left, rgba(254, 202, 87, 0.3) 0%, transparent 50%),
+                    linear-gradient(135deg, #0f0c29 0%, #302b63 35%, #24243e 100%);
+            }
+            50% { 
+                background: 
+                    radial-gradient(ellipse at top left, rgba(255, 75, 178, 0.3) 0%, transparent 50%),
+                    radial-gradient(ellipse at top right, rgba(17, 153, 142, 0.3) 0%, transparent 50%),
+                    radial-gradient(ellipse at center right, rgba(254, 202, 87, 0.3) 0%, transparent 50%),
+                    radial-gradient(ellipse at center left, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                    linear-gradient(135deg, #24243e 0%, #0f0c29 35%, #302b63 100%);
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px 25px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            margin: 5px 0 0 0;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 20px;
+        }
+
+        /* Left Sidebar Styling */
+        .sidebar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 0;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            height: fit-content;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .profile-card {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.8) 0%, rgba(255, 75, 178, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: white;
+            padding: 25px;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .profile-avatar {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .menu-item {
+            padding: 18px 25px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 4px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .menu-item:hover::before {
+            left: 100%;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: rgba(255, 75, 178, 0.8);
+            color: #ffffff;
+            transform: translateX(8px);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .menu-item.active {
+            background: rgba(255, 75, 178, 0.2);
+            color: white;
+            border-left-color: #ff4bb2;
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                0 4px 15px rgba(255, 75, 178, 0.3);
+        }
+
+        .menu-item:last-child {
+            border-radius: 0 0 20px 20px;
+        }
+
+        /* Main Feed Styling */
+        .main-feed {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 0;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            min-height: 600px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feed-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px 20px 0 0;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .feed-title {
+            color: #ffffff;
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .feed-content {
+            padding: 20px;
+        }
+
+        /* Post Styling */
+        .post {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .post::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        }
+
+        .post:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .post.priority {
+            border-left: 4px solid rgba(255, 202, 87, 0.8);
+            background: rgba(255, 202, 87, 0.1);
+            box-shadow: 
+                0 8px 32px rgba(255, 202, 87, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .post.close-friends {
+            border-left: 4px solid rgba(255, 75, 178, 0.8);
+            background: rgba(255, 75, 178, 0.1);
+            box-shadow: 
+                0 8px 32px rgba(255, 75, 178, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .post-header {
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .post-author-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .post-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.8) 0%, rgba(255, 75, 178, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .post-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+        }
+
+        .post-author {
+            font-weight: 700;
+            color: #ffffff;
+            cursor: pointer;
+            margin: 0;
+            transition: all 0.3s ease;
+        }
+
+        .post-author:hover {
+            color: rgba(255, 75, 178, 0.9);
+            text-shadow: 0 0 10px rgba(255, 75, 178, 0.5);
+        }
+
+        .post-time {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            margin: 3px 0 0 0;
+        }
+
+        .post-badge {
+            background: linear-gradient(135deg, rgba(255, 75, 178, 0.8) 0%, rgba(120, 119, 198, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 700;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .post-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255, 75, 178, 0.4);
+        }
+
+        .post-badge.close-friends {
+            background: linear-gradient(135deg, rgba(255, 75, 178, 0.9) 0%, rgba(156, 39, 176, 0.9) 100%);
+        }
+
+        .post-content {
+            padding: 20px 25px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 15px;
+        }
+
+        .post-media {
+            margin-top: 15px;
+        }
+
+        .post-media img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .media-info {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .media-info h4 {
+            color: #667eea;
+            margin: 0 0 8px 0;
+            font-size: 14px;
+        }
+
+        .media-info p {
+            margin: 0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Right Sidebar Styling */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .stats-card, .search-card, .notifications-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stats-card:hover, .search-card:hover, .notifications-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .card-title {
+            color: #ffffff;
+            margin: 0 0 20px 0;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 18px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .stat-item:hover::before {
+            left: 100%;
+        }
+
+        .stat-item:hover {
+            border-color: rgba(255, 75, 178, 0.5);
+            background: rgba(255, 75, 178, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 75, 178, 0.3);
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ffffff;
+            display: block;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-text {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            font-size: 14px;
+            color: #ffffff;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-input:focus {
+            border-color: rgba(255, 75, 178, 0.8);
+            box-shadow: 
+                0 0 0 3px rgba(255, 75, 178, 0.2),
+                0 8px 25px rgba(255, 75, 178, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Custom dropdown styling for better glassmorphic effect */
+        select {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: #ffffff !important;
+        }
+
+        select option {
+            background: rgba(30, 30, 60, 0.95) !important;
+            color: #ffffff !important;
+            padding: 10px !important;
+        }
+
+        select option:hover,
+        select option:focus,
+        select option:checked {
+            background: rgba(255, 75, 178, 0.8) !important;
+            color: #ffffff !important;
+        }
+
+        /* Fix for webkit browsers */
+        select::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        select::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        select::-webkit-scrollbar-thumb {
+            background: rgba(255, 75, 178, 0.6);
+            border-radius: 4px;
+        }
+
+        select::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 75, 178, 0.8);
+        }
+
+        .search-results {
+            margin-top: 15px;
+        }
+
+        .search-result-item {
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .search-result-item:hover {
+            background: rgba(255, 75, 178, 0.2);
+            border-color: rgba(255, 75, 178, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 75, 178, 0.3);
+        }
+
+        .notification-item {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border-left: 4px solid rgba(255, 75, 178, 0.8);
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        .notification-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .notification-item.unread {
+            background: rgba(255, 75, 178, 0.1);
+            border-left-color: #ff4bb2;
+            box-shadow: 0 4px 15px rgba(255, 75, 178, 0.2);
+        }
+
+        .notification-item.priority {
+            background: rgba(254, 202, 87, 0.1);
+            border-left-color: #feca57;
+            box-shadow: 0 4px 15px rgba(254, 202, 87, 0.2);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Advanced messaging styles */
+        .conversation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+
+        .conversation-item:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .conversation-info {
+            flex: 1;
+        }
+
+        .last-message {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .message-time {
+            color: #999;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .unread-badge {
+            background: #dc3545;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .messages-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            position: relative;
+        }
+
+        .message-bubble.own {
+            background: #667eea;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-bubble.other {
+            background: white;
+            color: #333;
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+            border: 1px solid #e9ecef;
+        }
+
+        .message-content {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message-input-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .message-input-container input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 14px;
+        }
+
+        .message-input-container input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .send-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .send-btn:hover {
+            background: #5a6fd8;
+        }
+
+        /* Notification styles */
+        .notification {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            border-left: 4px solid rgba(255, 75, 178, 0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .notification:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 75, 178, 0.3);
+        }
+
+        .notification.priority {
+            background: rgba(254, 202, 87, 0.1);
+            border: 1px solid rgba(254, 202, 87, 0.3);
+            border-left: 4px solid rgba(254, 202, 87, 0.8);
+            box-shadow: 0 4px 15px rgba(254, 202, 87, 0.2);
+        }
+
+        .notification.priority:hover {
+            background: rgba(254, 202, 87, 0.15);
+            box-shadow: 0 8px 25px rgba(254, 202, 87, 0.4);
+        }
+
+        .notification.unread {
+            background: rgba(255, 75, 178, 0.15);
+            border: 1px solid rgba(255, 75, 178, 0.4);
+            border-left: 4px solid #ff4bb2;
+            box-shadow: 0 4px 15px rgba(255, 75, 178, 0.3);
+            font-weight: 600;
+        }
+
+        .notification.unread:hover {
+            background: rgba(255, 75, 178, 0.2);
+            box-shadow: 0 8px 25px rgba(255, 75, 178, 0.4);
+        }
+
+        /* Media post styles */
+        .media-inputs {
+            margin-top: 20px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            border-style: dashed;
+            transition: all 0.3s ease;
+        }
+
+        .media-inputs:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 75, 178, 0.5);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, rgba(108, 117, 125, 0.8) 0%, rgba(75, 85, 99, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .file-input-label:hover {
+            background: linear-gradient(135deg, rgba(108, 117, 125, 1) 0%, rgba(75, 85, 99, 1) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+        }
+
+        .media-preview {
+            margin-top: 20px;
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .media-preview:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .media-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+        }
+
+        .media-preview video {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+        }
+
+        .media-preview audio {
+            width: 100%;
+        }
+
+        #file-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
+        .post-media {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .post-media img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .post-media img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .post-media video {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .post-media audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .media-info {
+            background: rgba(17, 153, 142, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(17, 153, 142, 0.3);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border-left: 4px solid rgba(17, 153, 142, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .media-info:hover {
+            background: rgba(17, 153, 142, 0.15);
+        }
+
+        .media-info h4 {
+            color: rgba(17, 153, 142, 0.9);
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .media-info p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 13px;
+            margin-bottom: 3px;
+            line-height: 1.4;
+        }
+
+        .post-footer {
+            padding: 20px 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .post-interactions {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .interaction-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .interaction-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .interaction-btn:hover::before {
+            left: 100%;
+        }
+
+        .interaction-btn:hover {
+            background: rgba(255, 75, 178, 0.2);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 75, 178, 0.3);
+            border-color: rgba(255, 75, 178, 0.5);
+        }
+
+        .interaction-btn:active {
+            transform: translateY(0);
+            transition: transform 0.1s;
+        }
+
+        .interaction-btn span {
+            font-size: 16px;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+        }
+
+        /* Message styling */
+        #message-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            pointer-events: none;
+        }
+
+        .message {
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 10px;
+            animation: slideIn 0.3s ease;
+            max-width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            pointer-events: auto;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        }
+
+        .message.warning {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* User card styling */
+        .user-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 4px solid transparent;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-card:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border-left-color: rgba(255, 75, 178, 0.8);
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .user-card h4 {
+            color: #ffffff;
+            margin: 0 0 12px 0;
+            font-size: 20px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .user-info {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .user-actions button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, rgba(255, 75, 178, 0.8) 0%, rgba(120, 119, 198, 0.8) 100%);
+            color: white;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .user-actions button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 75, 178, 0.4);
+        }
+
+        .user-actions button.success {
+            background: linear-gradient(135deg, rgba(17, 153, 142, 0.8) 0%, rgba(56, 178, 172, 0.8) 100%);
+        }
+
+        .user-actions button.success:hover {
+            box-shadow: 0 8px 25px rgba(17, 153, 142, 0.4);
+        }
+
+        .user-actions button.danger {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.8) 0%, rgba(220, 38, 38, 0.8) 100%);
+        }
+
+        .user-actions button.danger:hover {
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+        }
+
+        .user-actions button.warning {
+            background: linear-gradient(135deg, rgba(254, 202, 87, 0.8) 0%, rgba(251, 191, 36, 0.8) 100%);
+        }
+
+        .user-actions button.warning:hover {
+            box-shadow: 0 8px 25px rgba(254, 202, 87, 0.4);
+        }
+
+        /* Profile header styling */
+        .profile-header {
+            background: linear-gradient(135deg, rgba(255, 75, 178, 0.8) 0%, rgba(120, 119, 198, 0.8) 100%);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(255, 75, 178, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .profile-header:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 45px rgba(255, 75, 178, 0.4);
+        }
+
+        .profile-header h2 {
+            margin: 0 0 25px 0;
+            font-size: 32px;
+            font-weight: 800;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-header .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 25px;
+        }
+
+        .profile-header .stat {
+            text-align: center;
+        }
+
+        .profile-header .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            display: block;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-header .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        /* Section styling */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Input group styling */
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            font-size: 15px;
+            color: #ffffff;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+        }
+
+        .input-group select {
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+            padding-right: 50px;
+        }
+
+        .input-group select option {
+            background: rgba(30, 30, 60, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #ffffff;
+            padding: 10px;
+            border: none;
+        }
+
+        .input-group select option:hover,
+        .input-group select option:focus,
+        .input-group select option:checked {
+            background: rgba(255, 75, 178, 0.8);
+            color: #ffffff;
+        }
+
+        .input-group input::placeholder,
+        .input-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: rgba(255, 75, 178, 0.8);
+            box-shadow: 
+                0 0 0 3px rgba(255, 75, 178, 0.2),
+                0 8px 25px rgba(255, 75, 178, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Skeleton Loader */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 12px;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-post {
+            height: 200px;
+            margin-bottom: 20px;
+        }
+
+        .skeleton-text {
+            height: 20px;
+            margin-bottom: 10px;
+        }
+
+        .skeleton-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+        }
+
+        /* Button styling */
+        button {
+            padding: 15px 25px;
+            background: linear-gradient(135deg, rgba(255, 75, 178, 0.8) 0%, rgba(120, 119, 198, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #ffffff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, rgba(255, 75, 178, 1) 0%, rgba(120, 119, 198, 1) 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255, 75, 178, 0.4);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+            transition: transform 0.1s;
+        }
+
+        button.success {
+            background: linear-gradient(135deg, rgba(17, 153, 142, 0.8) 0%, rgba(56, 178, 172, 0.8) 100%);
+        }
+
+        button.success:hover {
+            background: linear-gradient(135deg, rgba(17, 153, 142, 1) 0%, rgba(56, 178, 172, 1) 100%);
+            box-shadow: 0 15px 35px rgba(17, 153, 142, 0.4);
+        }
+
+        button.danger {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.8) 0%, rgba(220, 38, 38, 0.8) 100%);
+        }
+
+        button.danger:hover {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 1) 0%, rgba(220, 38, 38, 1) 100%);
+            box-shadow: 0 15px 35px rgba(239, 68, 68, 0.4);
+        }
+
+        button.warning {
+            background: linear-gradient(135deg, rgba(254, 202, 87, 0.8) 0%, rgba(251, 191, 36, 0.8) 100%);
+        }
+
+        button.warning:hover {
+            background: linear-gradient(135deg, rgba(254, 202, 87, 1) 0%, rgba(251, 191, 36, 1) 100%);
+            box-shadow: 0 15px 35px rgba(254, 202, 87, 0.4);
+        }
+
+        /* Auth section styling */
+        .auth-section {
+            max-width: 450px;
+            margin: 100px auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 50px;
+            border-radius: 25px;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .auth-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 35px 70px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .auth-section h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 28px;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .sidebar, .right-panel {
+                display: none;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 10px 15px;
+                margin-bottom: 15px;
+            }
+            
+            .main-feed {
+                margin: 0;
+            }
+            
+            .post {
+                margin-bottom: 15px;
+            }
+            
+            .user-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .user-actions button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Message Container for notifications -->
+        <div id="message-container"></div>
+        
+        <!-- Authentication Section -->
+        <div id="auth-container">
+            <div class="auth-section">
+                <h2 style="text-align: center; color: #ffffff; margin-bottom: 30px; font-weight: 800; font-size: 28px; text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">🚀 Priority Social Media</h2>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 30px;">Welcome to the future of social networking</p>
+                
+                <div id="login-form">
+                    <div class="input-group">
+                        <label>Username</label>
+                        <input type="text" id="login-username" placeholder="Enter username" class="input">
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" id="login-password" placeholder="Enter password" class="input">
+                    </div>
+                    <button onclick="login()" class="btn" style="width: 100%; margin-bottom: 15px;">Login</button>
+                    <button onclick="showRegister()" class="btn btn-success" style="width: 100%;">Create New Account</button>
+                </div>
+
+                <div id="register-form" class="hidden">
+                    <div class="input-group">
+                        <label>Username</label>
+                        <input type="text" id="register-username" placeholder="Choose username (min 3 characters)" class="input">
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" id="register-password" placeholder="Choose password (min 6 characters)" class="input">
+                    </div>
+                    <button onclick="register()" class="btn btn-success" style="width: 100%; margin-bottom: 15px;">Create Account</button>
+                    <button onclick="showLogin()" class="btn" style="width: 100%; background: rgba(255, 255, 255, 0.1);">Back to Login</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Application -->
+        <div id="main-container" class="hidden">
+            <div class="header">
+                <h1>🚀 Priority Social Media</h1>
+                <p>Welcome, <span id="current-username">@username</span>!</p>
+            </div>
+
+            <div class="main-content">
+                <!-- Left Sidebar Navigation -->
+                <div class="sidebar">
+                    <div class="profile-card">
+                        <div class="profile-avatar">👤</div>
+                        <div style="font-weight: 600; margin-bottom: 5px;" id="sidebar-username">@username</div>
+                        <div class="profile-stats">
+                            <div class="stat">
+                                <span class="stat-value" id="sidebar-posts">0</span>
+                                <span class="stat-label">Posts</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="sidebar-followers">0</span>
+                                <span class="stat-label">Followers</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="sidebar-following">0</span>
+                                <span class="stat-label">Following</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="menu-item active" onclick="showSection('feed')">
+                        <span>🏠</span> My Feed
+                    </div>
+                    <div class="menu-item" onclick="showSection('create-post')">
+                        <span>✏️</span> Create Post
+                    </div>
+                    <div class="menu-item" onclick="showSection('my-posts')">
+                        <span>📄</span> My Posts
+                    </div>
+                    <div class="menu-item" onclick="showSection('users')">
+                        <span>👥</span> Find Users
+                    </div>
+                    <div class="menu-item" onclick="showSection('followers')">
+                        <span>👥</span> My Followers
+                    </div>
+                    <div class="menu-item" onclick="showSection('following')">
+                        <span>🔗</span> Following
+                    </div>
+                    <div class="menu-item" onclick="showSection('close-friends')">
+                        <span>⭐</span> Close Friends
+                    </div>
+                    <div class="menu-item" onclick="showSection('messages')">
+                        <span>💬</span> Messages
+                    </div>
+                    <div class="menu-item" onclick="showSection('notifications')">
+                        <span>🔔</span> Notifications
+                    </div>
+                    <div class="menu-item" onclick="showDataManagement()">
+                        <span>💾</span> Data Management
+                    </div>
+                    <div class="menu-item" onclick="logout()">
+                        <span>🚪</span> Logout
+                    </div>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="main-feed">
+
+                    <!-- Feed Section -->
+                    <div id="feed-section" class="section active">
+                        <div class="feed-header">
+                            <h2 class="feed-title">🏠 My Feed</h2>
+                        </div>
+                        <div class="feed-content" id="feed-content"></div>
+                    </div>
+
+                    <!-- Other sections with similar structure -->
+                    <div id="users-section" class="section">
+                        <div class="feed-header">
+                            <h2 class="feed-title">👥 Find Users</h2>
+                        </div>
+                        <div class="feed-content">
+                            <div class="search-box" style="margin-bottom: 20px;">
+                                <input type="text" class="search-input" id="user-search" placeholder="Search users..." onkeyup="searchUsers()">
+                            </div>
+                            <div id="users-content"></div>
+                        </div>
+                    </div>
+
+                    <!-- Add all other sections with similar structure -->
+                    <div id="profile-section" class="section">
+                        <div class="feed-header">
+                            <h2 class="feed-title">👤 My Profile</h2>
+                        </div>
+                        <div class="feed-content" id="profile-content"></div>
+                    </div>
+
+                    <div id="user-profile-section" class="section">
+                        <div class="feed-header">
+                            <h2 class="feed-title">👤 User Profile</h2>
+                        </div>
+                        <div class="feed-content" id="user-profile-content"></div>
+                    </div>
+
+                    <div id="followers-section" class="section">
+                        <div class="feed-header">
+                            <h2 class="feed-title">👥 My Followers</h2>
+                        </div>
+                        <div class="feed-content" id="followers-content"></div>
+                    </div>
+
+                    <div id="following-section" class="section">
+                        <div class="feed-header">
+                            <h2 class="feed-title">🔗 Following</h2>
+                        </div>
+                        <div class="feed-content" id="following-content"></div>
+                    </div>
+
+                    <div id="close-friends-section" class="section">
+                        <div class="feed-header">
+                            <h2 class="feed-title">⭐ Close Friends</h2>
+                        </div>
+                        <div class="feed-content" id="close-friends-content"></div>
+                    </div>
+
+                    <div id="messages-section" class="section">
+                        <div class="feed-header">
+                            <h2 class="feed-title">💬 Messages</h2>
+                        </div>
+                        <div class="feed-content" id="messages-content"></div>
+                    </div>
+
+                    <div id="conversation-section" class="section">
+                        <div class="feed-header">
+                            <h2 class="feed-title">💬 Conversation</h2>
+                        </div>
+                        <div class="feed-content" id="conversation-content"></div>
+                    </div>
+
+                    <div id="notifications-section" class="section">
+                        <div class="feed-header">
+                            <h2 class="feed-title">🔔 Notifications</h2>
+                        </div>
+                        <div class="feed-content" id="notifications-content"></div>
+                    </div>
+
+                    <div id="create-post-section" class="section">
+                        <div class="feed-header">
+                            <h2 class="feed-title">✏️ Create Post</h2>
+                        </div>
+                        <div class="feed-content">
+                            <div class="input-group">
+                                <label>What's on your mind?</label>
+                                <textarea id="post-content" rows="4" placeholder="Share your thoughts..." style="width: 100%; padding: 15px; border: 2px solid #e1e8ed; border-radius: 12px; font-size: 14px; resize: vertical;"></textarea>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label>Post Type</label>
+                                <select id="post-type" onchange="toggleMediaInputs()" style="width: 100%; padding: 12px; border: 2px solid #e1e8ed; border-radius: 8px;">
+                                    <option value="text">📄 Text Post</option>
+                                    <option value="image">🖼️ Image Post</option>
+                                    <option value="video">🎥 Video Post</option>
+                                    <option value="audio">🎵 Audio Post</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Post Audience</label>
+                                <select id="post-audience" style="width: 100%; padding: 12px; border: 2px solid #e1e8ed; border-radius: 8px;">
+                                    <option value="all">🌍 All Followers</option>
+                                    <option value="close-friends">⭐ Close Friends Only</option>
+                                </select>
+                            </div>
+
+                            <div id="media-inputs" class="media-inputs hidden">
+                                <div class="input-group">
+                                    <label>Select Media File</label>
+                                    <div class="file-input-wrapper">
+                                        <input type="file" id="media-file" class="file-input" accept="image/*,video/*,audio/*" onchange="handleFileSelect()">
+                                        <label for="media-file" class="file-input-label">📂 Choose File</label>
+                                    </div>
+                                    <div id="file-info" class="hidden" style="margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; font-size: 13px;"></div>
+                                    <div id="media-preview" class="media-preview hidden"></div>
+                                </div>
+
+                                <div class="input-group">
+                                    <label>Media Description</label>
+                                    <input type="text" id="media-description" placeholder="Describe your media content..." style="width: 100%; padding: 12px; border: 2px solid #e1e8ed; border-radius: 8px;">
+                                </div>
+                            </div>
+
+                            <button onclick="createPost()" class="success" style="width: 100%; padding: 15px; font-size: 16px; font-weight: 600;">✨ Create Post</button>
+                        </div>
+                    </div>
+
+                    <div id="my-posts-section" class="section">
+                        <div class="feed-header">
+                            <h2 class="feed-title">📄 My Posts</h2>
+                        </div>
+                        <div class="feed-content" id="my-posts-content"></div>
+                    </div>
+
+                    <div id="data-management-section" class="section">
+                        <div class="feed-header">
+                            <h2 class="feed-title">💾 Data Management</h2>
+                        </div>
+                        <div class="feed-content">
+                            <div class="card" style="margin-bottom: 20px;">
+                                <h3 style="color: #ffffff; margin-bottom: 15px;">📊 Storage Information</h3>
+                                <div id="storage-info" style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;"></div>
+                            </div>
+
+                            <div class="card" style="margin-bottom: 20px;">
+                                <h3 style="color: #ffffff; margin-bottom: 15px;">🔧 Data Actions</h3>
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    <button onclick="saveDataToStorage()" class="btn btn-success">
+                                        💾 Save Data Now
+                                    </button>
+                                    <button onclick="exportDataAsJSON()" class="btn">
+                                        📥 Export Backup
+                                    </button>
+                                    <button onclick="clearAllData()" class="btn btn-danger">
+                                        🗑️ Clear All Data
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <h3 style="color: #ffffff; margin-bottom: 15px;">ℹ️ About Data Storage</h3>
+                                <div style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">
+                                    <p style="margin-bottom: 10px;">• Your data is automatically saved every 30 seconds</p>
+                                    <p style="margin-bottom: 10px;">• Data is stored locally in your browser</p>
+                                    <p style="margin-bottom: 10px;">• Export backups to keep your data safe</p>
+                                    <p style="margin-bottom: 10px;">• Clear data will delete everything permanently</p>
+                                    <p style="margin-bottom: 0;">• Data includes: accounts, posts, messages, follows, and settings</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel -->
+                <div class="right-panel">
+                    <!-- Quick Stats Card -->
+                    <div class="stats-card">
+                        <h3 class="card-title">📊 Quick Stats</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-number" id="stats-posts">0</span>
+                                <span class="stat-text">Posts</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="stats-followers">0</span>
+                                <span class="stat-text">Followers</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="stats-following">0</span>
+                                <span class="stat-text">Following</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Search Card -->
+                    <div class="search-card">
+                        <h3 class="card-title">🔍 Quick Search</h3>
+                        <div class="search-box">
+                            <input type="text" class="search-input" id="quick-search" placeholder="Search users..." onkeyup="quickSearch()">
+                        </div>
+                        <div id="quick-search-results" class="search-results"></div>
+                    </div>
+
+                    <!-- Recent Notifications Card -->
+                    <div class="notifications-card">
+                        <h3 class="card-title">🔔 Recent Notifications</h3>
+                        <div id="recent-notifications-list">
+                            <div class="notification-item">🎉 Welcome to Priority Social Media!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple, working social media application with persistent storage
+        let users = [];
+        let posts = [];
+        let follows = [];
+        let closeFriends = [];
+        let messages = [];
+        let notifications = [];
+        let currentUser = null;
+        let nextUserId = 1;
+        let nextPostId = 1;
+        let nextMessageId = 1;
+        let nextNotifId = 1;
+
+        // Data persistence functions
+        function saveDataToStorage() {
+            const appData = {
+                users,
+                posts,
+                follows,
+                closeFriends,
+                messages,
+                notifications,
+                nextUserId,
+                nextPostId,
+                nextMessageId,
+                nextNotifId,
+                lastSaved: Date.now()
+            };
+            
+            try {
+                localStorage.setItem('prioritySocialMediaData', JSON.stringify(appData));
+                console.log('✅ Data saved successfully');
+            } catch (error) {
+                console.error('❌ Error saving data:', error);
+                showMessage('Error saving data. Your changes might not persist.', 'error');
+            }
+        }
+
+        function loadDataFromStorage() {
+            try {
+                const savedData = localStorage.getItem('prioritySocialMediaData');
+                if (savedData) {
+                    const appData = JSON.parse(savedData);
+                    
+                    // Restore all data
+                    users = appData.users || [];
+                    posts = appData.posts || [];
+                    follows = appData.follows || [];
+                    closeFriends = appData.closeFriends || [];
+                    messages = appData.messages || [];
+                    notifications = appData.notifications || [];
+                    nextUserId = appData.nextUserId || 1;
+                    nextPostId = appData.nextPostId || 1;
+                    nextMessageId = appData.nextMessageId || 1;
+                    nextNotifId = appData.nextNotifId || 1;
+                    
+                    console.log('✅ Data loaded successfully');
+                    console.log(`📊 Loaded: ${users.length} users, ${posts.length} posts, ${messages.length} messages`);
+                    
+                    if (appData.lastSaved) {
+                        const lastSaved = new Date(appData.lastSaved);
+                        console.log(`💾 Last saved: ${lastSaved.toLocaleString()}`);
+                    }
+                    
+                    return true;
+                } else {
+                    console.log('📝 No saved data found, starting fresh');
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ Error loading data:', error);
+                showMessage('Error loading saved data. Starting fresh.', 'warning');
+                return false;
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('⚠️ This will delete ALL data including accounts, posts, and messages. Are you sure?')) {
+                localStorage.removeItem('prioritySocialMediaData');
+                
+                // Reset all data
+                users = [];
+                posts = [];
+                follows = [];
+                closeFriends = [];
+                messages = [];
+                notifications = [];
+                currentUser = null;
+                nextUserId = 1;
+                nextPostId = 1;
+                nextMessageId = 1;
+                nextNotifId = 1;
+                
+                showMessage('All data cleared successfully', 'success');
+                
+                // Redirect to login
+                logout();
+            }
+        }
+
+        function exportDataAsJSON() {
+            const appData = {
+                users: users.map(u => ({...u, password: '***HIDDEN***'})), // Hide passwords in export
+                posts,
+                follows,
+                closeFriends,
+                messages,
+                notifications,
+                exportDate: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            const dataStr = JSON.stringify(appData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `priority_social_media_backup_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+            showMessage('Data exported successfully! 📥', 'success');
+        }
+
+        // Auto-save functionality
+        function enableAutoSave() {
+            // Save data every 30 seconds
+            setInterval(saveDataToStorage, 30000);
+            
+            // Save data when user leaves the page
+            window.addEventListener('beforeunload', saveDataToStorage);
+            
+            // Save data when page becomes hidden (mobile/tab switching)
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    saveDataToStorage();
+                }
+            });
+        }
+
+        // Authentication functions
+        function showLogin() {
+            document.getElementById('login-form').classList.remove('hidden');
+            document.getElementById('register-form').classList.add('hidden');
+        }
+
+        function showRegister() {
+            document.getElementById('register-form').classList.remove('hidden');
+            document.getElementById('login-form').classList.add('hidden');
+        }
+
+        function login() {
+            console.log('Login function called');
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+            
+            console.log('Username:', username, 'Password:', password);
+
+            if (!username || !password) {
+                console.log('Missing username or password');
+                showMessage('Please enter both username and password', 'error');
+                return;
+            }
+
+            if (users.length === 0) {
+                showMessage('No users registered yet. Please create an account first.', 'error');
+                return;
+            }
+
+            const user = users.find(u => u.username === username && u.password === password);
+            console.log('Found user:', user);
+            
+            if (!user) {
+                console.log('User not found');
+                showMessage('Invalid username or password', 'error');
+                return;
+            }
+
+            console.log('Login successful');
+            currentUser = user;
+            document.getElementById('auth-container').classList.add('hidden');
+            document.getElementById('main-container').classList.remove('hidden');
+            document.getElementById('current-username').textContent = '@' + user.username;
+
+            // Welcome message for new login
+            addNotification(user.id, `Welcome to Priority Social Media! 🎉`, 0);
+
+            showMessage(`Welcome, ${user.username}! 🎉`, 'success');
+            showSection('feed');
+            updateStats();
+        }
+
+        function register() {
+            const username = document.getElementById('register-username').value.trim();
+            const password = document.getElementById('register-password').value.trim();
+
+            if (!username || !password) {
+                showMessage('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (username.length < 3) {
+                showMessage('Username must be at least 3 characters', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            if (users.find(u => u.username === username)) {
+                showMessage('Username already exists', 'error');
+                return;
+            }
+
+            const newUser = {
+                id: nextUserId++,
+                username,
+                password,
+                createdAt: Date.now(),
+                isOnline: true
+            };
+
+            users.push(newUser);
+            
+            // Save data immediately after registration
+            saveDataToStorage();
+            
+            showMessage('Registration successful! Please login with your new account.', 'success');
+            
+            // Clear registration form
+            document.getElementById('register-username').value = '';
+            document.getElementById('register-password').value = '';
+            
+            // Switch to login form
+            showLogin();
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('auth-container').classList.remove('hidden');
+            document.getElementById('main-container').classList.add('hidden');
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+        }
+
+        // Navigation functions
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Remove active class from all menu items
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => item.classList.remove('active'));
+
+            // Show selected section
+            document.getElementById(sectionName + '-section').classList.add('active');
+
+            // Add active class to clicked menu item
+            event.target.classList.add('active');
+
+            // Load content for the section
+            switch(sectionName) {
+                case 'feed':
+                    loadFeed();
+                    break;
+                case 'users':
+                    loadUsers();
+                    break;
+                case 'profile':
+                    loadMyProfile();
+                    break;
+                case 'followers':
+                    loadFollowers();
+                    break;
+                case 'following':
+                    loadFollowing();
+                    break;
+                case 'close-friends':
+                    loadCloseFriends();
+                    break;
+                case 'messages':
+                    loadMessages();
+                    break;
+                case 'notifications':
+                    loadNotifications();
+                    break;
+            }
+        }
+
+        // Content loading functions
+        function loadFeed() {
+            const container = document.getElementById('feed-content');
+            
+            // Show skeleton loader
+            showSkeletonLoader('feed-content', 3);
+            
+            // Simulate loading delay for better UX
+            setTimeout(() => {
+                const myFollowing = follows.filter(f => f.followerId === currentUser.id).map(f => f.followingId);
+                const feedPosts = posts.filter(p => {
+                    // Always show own posts
+                    if (p.authorId === currentUser.id) return true;
+                    
+                    // Don't show posts from users we don't follow
+                    if (!myFollowing.includes(p.authorId)) return false;
+                    
+                    // For close friends only posts, check if current user is a close friend of the author
+                    if (p.isCloseFriendsOnly) {
+                        return closeFriends.some(cf => cf.userId === p.authorId && cf.friendId === currentUser.id);
+                    }
+                    
+                    // Show regular posts from followed users
+                    return true;
+                }).sort((a, b) => {
+                    // Priority sorting: Close friends posts first, then by timestamp
+                    const aIsFromCloseFriend = closeFriends.some(cf => cf.userId === a.authorId && cf.friendId === currentUser.id);
+                    const bIsFromCloseFriend = closeFriends.some(cf => cf.userId === b.authorId && cf.friendId === currentUser.id);
+                    
+                    if (aIsFromCloseFriend && !bIsFromCloseFriend) return -1;
+                    if (!aIsFromCloseFriend && bIsFromCloseFriend) return 1;
+                    
+                    return b.timestamp - a.timestamp;
+                });
+
+                if (feedPosts.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 60px 40px; color: rgba(255, 255, 255, 0.7);">
+                            <div style="font-size: 48px; margin-bottom: 20px;">📭</div>
+                            <h3 style="color: #ffffff; margin-bottom: 15px;">No posts to display</h3>
+                            <p style="margin-bottom: 25px;">Follow some users to see their posts!</p>
+                            <button onclick="showSection('users')" style="padding: 12px 25px;">👥 Find Users</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                feedPosts.forEach(post => {
+                    const isFromCloseFriend = closeFriends.some(cf => cf.userId === post.authorId && cf.friendId === currentUser.id);
+                    html += renderPost(post, isFromCloseFriend);
+                });
+
+                container.innerHTML = html;
+            }, 800); // Simulate network delay
+        }
+
+        function loadUsers() {
+            const container = document.getElementById('users-content');
+            const otherUsers = users.filter(u => u.id !== currentUser.id);
+
+            if (otherUsers.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 60px 40px; color: rgba(255, 255, 255, 0.7);">
+                        <div style="font-size: 48px; margin-bottom: 20px;">👥</div>
+                        <h3 style="color: #ffffff; margin-bottom: 15px;">No other users yet</h3>
+                        <p style="margin-bottom: 25px;">You're the first user! Invite friends to join Priority Social Media.</p>
+                        <p style="color: rgba(255, 255, 255, 0.6);">Share the registration link with others to build your network!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            otherUsers.forEach(user => {
+                const isFollowing = follows.some(f => f.followerId === currentUser.id && f.followingId === user.id);
+                const isCloseFriend = closeFriends.some(cf => cf.userId === currentUser.id && cf.friendId === user.id);
+                const userPosts = posts.filter(p => p.authorId === user.id).length;
+
+                html += `
+                    <div class="user-card">
+                        <h4 onclick="showUserProfile(${user.id})" style="cursor: pointer;">@${user.username}</h4>
+                        <div class="user-info">
+                            📄 ${userPosts} posts • 📅 Joined ${new Date(user.createdAt).toLocaleDateString()}
+                            ${isCloseFriend ? ' • ⭐ Close Friend' : ''}
+                        </div>
+                        <div class="user-actions">
+                            <button onclick="showUserProfile(${user.id})">👤 View Profile</button>
+                            ${isFollowing 
+                                ? `<button class="danger" onclick="unfollowUser(${user.id})">➖ Unfollow</button>`
+                                : `<button class="success" onclick="followUser(${user.id})">➕ Follow</button>`
+                            }
+                            ${isFollowing && !isCloseFriend
+                                ? `<button class="warning" onclick="addCloseFriend(${user.id})">⭐ Add Friend</button>`
+                                : ''
+                            }
+                            ${isCloseFriend
+                                ? `<button onclick="removeCloseFriend(${user.id})">❌ Remove Friend</button>`
+                                : ''
+                            }
+                            <button onclick="startConversation(${user.id})" style="background: #17a2b8;">💬 Message</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function loadMyProfile() {
+            const container = document.getElementById('profile-content');
+            const myPosts = posts.filter(p => p.authorId === currentUser.id);
+            const myFollowers = follows.filter(f => f.followingId === currentUser.id);
+            const myFollowing = follows.filter(f => f.followerId === currentUser.id);
+            const myCloseFriends = closeFriends.filter(cf => cf.userId === currentUser.id);
+
+            let html = `
+                <div class="profile-header">
+                    <h2>@${currentUser.username}</h2>
+                    <div class="profile-stats">
+                        <div class="stat">
+                            <div class="stat-value">${myPosts.length}</div>
+                            <div class="stat-label">Posts</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${myFollowers.length}</div>
+                            <div class="stat-label">Followers</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${myFollowing.length}</div>
+                            <div class="stat-label">Following</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${myCloseFriends.length}</div>
+                            <div class="stat-label">Close Friends</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="color: #667eea; margin-bottom: 15px;">📄 My Posts</h3>
+            `;
+
+            if (myPosts.length === 0) {
+                html += '<div style="text-align: center; padding: 20px; color: #999;">No posts yet. <button onclick="showSection(\'create-post\')">Create your first post!</button></div>';
+            } else {
+                myPosts.sort((a, b) => b.timestamp - a.timestamp).forEach(post => {
+                    html += renderPost(post, false);
+                });
+            }
+
+            container.innerHTML = html;
+        }
+
+        function showUserProfile(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+
+            const container = document.getElementById('user-profile-content');
+            const isFollowing = follows.some(f => f.followerId === currentUser.id && f.followingId === userId);
+            const isCloseFriend = closeFriends.some(cf => cf.userId === currentUser.id && cf.friendId === userId);
+            const userPosts = posts.filter(p => p.authorId === userId);
+            const userFollowers = follows.filter(f => f.followingId === userId);
+            const userFollowing = follows.filter(f => f.followerId === userId);
+
+            let html = `
+                <div class="profile-header">
+                    <h2>@${user.username}</h2>
+                    <div class="profile-stats">
+                        <div class="stat">
+                            <div class="stat-value">${userPosts.length}</div>
+                            <div class="stat-label">Posts</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${userFollowers.length}</div>
+                            <div class="stat-label">Followers</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${userFollowing.length}</div>
+                            <div class="stat-label">Following</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <button onclick="showSection('users')" style="background: rgba(255, 255, 255, 0.2);">← Back to Users</button>
+                        ${isFollowing 
+                            ? `<button class="danger" onclick="unfollowUser(${userId}); showUserProfile(${userId});">➖ Unfollow</button>`
+                            : `<button class="success" onclick="followUser(${userId}); showUserProfile(${userId});">➕ Follow</button>`
+                        }
+                        ${isFollowing && !isCloseFriend
+                            ? `<button class="warning" onclick="addCloseFriend(${userId}); showUserProfile(${userId});">⭐ Add Friend</button>`
+                            : ''
+                        }
+                        ${isCloseFriend
+                            ? `<button onclick="removeCloseFriend(${userId}); showUserProfile(${userId});">❌ Remove Friend</button>`
+                            : ''
+                        }
+                        <button onclick="startConversation(${userId})" style="background: #17a2b8;">💬 Message</button>
+                    </div>
+                </div>
+
+                <h3 style="color: #ffffff; margin-bottom: 15px;">📄 Posts by @${user.username}</h3>
+            `;
+
+            if (userPosts.length === 0) {
+                html += '<div style="text-align: center; padding: 20px; color: rgba(255, 255, 255, 0.7);">No posts yet</div>';
+            } else {
+                // Filter posts based on visibility rules
+                const visiblePosts = userPosts.filter(post => {
+                    // Always show own posts
+                    if (userId === currentUser.id) return true;
+                    
+                    // For close friends only posts, check if current user is a close friend
+                    if (post.isCloseFriendsOnly) {
+                        return isCloseFriend;
+                    }
+                    
+                    // Show regular posts if following or if it's a public post
+                    return isFollowing || !post.isCloseFriendsOnly;
+                });
+
+                if (visiblePosts.length === 0) {
+                    html += `
+                        <div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.7);">
+                            <div style="font-size: 48px; margin-bottom: 20px;">🔒</div>
+                            <h3 style="color: #ffffff; margin-bottom: 15px;">Private Content</h3>
+                            <p>This user's posts are only visible to ${isFollowing ? 'close friends' : 'followers'}.</p>
+                            ${!isFollowing ? '<p style="margin-top: 10px;"><button class="success" onclick="followUser(' + userId + '); showUserProfile(' + userId + ');">➕ Follow to see posts</button></p>' : ''}
+                            ${isFollowing && !isCloseFriend ? '<p style="margin-top: 10px; color: rgba(255, 202, 87, 0.9);">⭐ Some posts are only visible to close friends</p>' : ''}
+                        </div>
+                    `;
+                } else {
+                    visiblePosts.sort((a, b) => b.timestamp - a.timestamp).forEach(post => {
+                        html += renderPost(post, isCloseFriend);
+                    });
+                    
+                    // Show message about hidden posts if there are close friends only posts not visible
+                    const hiddenPosts = userPosts.length - visiblePosts.length;
+                    if (hiddenPosts > 0) {
+                        html += `
+                            <div style="text-align: center; padding: 20px; margin-top: 20px; background: rgba(255, 202, 87, 0.1); border-radius: 12px; border: 1px solid rgba(255, 202, 87, 0.3);">
+                                <p style="color: rgba(255, 202, 87, 0.9); margin: 0;">
+                                    🔒 ${hiddenPosts} close friends post${hiddenPosts !== 1 ? 's' : ''} hidden
+                                    ${!isCloseFriend && isFollowing ? ' - Only visible to close friends' : ''}
+                                </p>
+                            </div>
+                        `;
+                    }
+                }
+            }
+
+            container.innerHTML = html;
+            showSection('user-profile');
+        }
+
+        function loadFollowers() {
+            const container = document.getElementById('followers-content');
+            const myFollowers = follows.filter(f => f.followingId === currentUser.id);
+
+            if (myFollowers.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <h3>👥 No followers yet</h3>
+                        <p>Share your content to attract followers!</p>
+                        <button onclick="showSection('create-post')">✏️ Create Post</button>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `<p style="margin-bottom: 20px; color: #666;">You have ${myFollowers.length} follower${myFollowers.length !== 1 ? 's' : ''}</p>`;
+
+            myFollowers.forEach(follow => {
+                const follower = users.find(u => u.id === follow.followerId);
+                if (follower) {
+                    const isFollowingBack = follows.some(f => f.followerId === currentUser.id && f.followingId === follower.id);
+                    const isCloseFriend = closeFriends.some(cf => cf.userId === currentUser.id && cf.friendId === follower.id);
+
+                    html += `
+                        <div class="user-card">
+                            <h4 onclick="showUserProfile(${follower.id})" style="cursor: pointer;">@${follower.username}</h4>
+                            <div class="user-info">
+                                Following you ${isFollowingBack ? '• You follow back' : ''}
+                                ${isCloseFriend ? ' • ⭐ Close Friend' : ''}
+                            </div>
+                            <div class="user-actions">
+                                <button onclick="showUserProfile(${follower.id})">👤 View Profile</button>
+                                ${!isFollowingBack
+                                    ? `<button class="success" onclick="followUser(${follower.id}); loadFollowers();">➕ Follow Back</button>`
+                                    : `<button class="danger" onclick="unfollowUser(${follower.id}); loadFollowers();">➖ Unfollow</button>`
+                                }
+                                <button onclick="startConversation(${follower.id})" style="background: #17a2b8;">💬 Message</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            container.innerHTML = html;
+        }
+
+        function loadFollowing() {
+            const container = document.getElementById('following-content');
+            const myFollowing = follows.filter(f => f.followerId === currentUser.id);
+
+            if (myFollowing.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <h3>🔗 Not following anyone yet</h3>
+                        <p>Discover and follow users to see their content!</p>
+                        <button onclick="showSection('users')">👥 Find Users</button>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `<p style="margin-bottom: 20px; color: #666;">You are following ${myFollowing.length} user${myFollowing.length !== 1 ? 's' : ''}</p>`;
+
+            myFollowing.forEach(follow => {
+                const followedUser = users.find(u => u.id === follow.followingId);
+                if (followedUser) {
+                    const isFollowingBack = follows.some(f => f.followerId === followedUser.id && f.followingId === currentUser.id);
+                    const isCloseFriend = closeFriends.some(cf => cf.userId === currentUser.id && cf.friendId === followedUser.id);
+
+                    html += `
+                        <div class="user-card">
+                            <h4 onclick="showUserProfile(${followedUser.id})" style="cursor: pointer;">@${followedUser.username}</h4>
+                            <div class="user-info">
+                                You follow them ${isFollowingBack ? '• Follows back' : ''}
+                                ${isCloseFriend ? ' • ⭐ Close Friend' : ''}
+                            </div>
+                            <div class="user-actions">
+                                <button onclick="showUserProfile(${followedUser.id})">👤 View Profile</button>
+                                <button class="danger" onclick="unfollowUser(${followedUser.id}); loadFollowing();">➖ Unfollow</button>
+                                ${!isCloseFriend
+                                    ? `<button class="warning" onclick="addCloseFriend(${followedUser.id}); loadFollowing();">⭐ Add Friend</button>`
+                                    : `<button onclick="removeCloseFriend(${followedUser.id}); loadFollowing();">❌ Remove Friend</button>`
+                                }
+                                <button onclick="startConversation(${followedUser.id})" style="background: #17a2b8;">💬 Message</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            container.innerHTML = html;
+        }
+
+        function loadCloseFriends() {
+            const container = document.getElementById('close-friends-content');
+            const myCloseFriends = closeFriends.filter(cf => cf.userId === currentUser.id);
+
+            if (myCloseFriends.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 60px 40px; color: rgba(255, 255, 255, 0.7);">
+                        <div style="font-size: 48px; margin-bottom: 20px;">⭐</div>
+                        <h3 style="color: #ffffff; margin-bottom: 15px;">No close friends yet</h3>
+                        <p style="margin-bottom: 25px;">Add close friends to see their priority content!</p>
+                        <button onclick="showSection('users')" style="padding: 12px 25px;">👥 Find Users</button>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #ffffff; margin-bottom: 20px;">⭐ Your Close Friends (${myCloseFriends.length})</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 30px;">
+            `;
+
+            myCloseFriends.forEach(cf => {
+                const friend = users.find(u => u.id === cf.friendId);
+                if (friend) {
+                    const friendPosts = posts.filter(p => p.authorId === friend.id).length;
+                    html += `
+                        <div class="user-card" style="border-left-color: rgba(255, 202, 87, 0.8); padding: 20px;">
+                            <h4 onclick="showUserProfile(${friend.id})" style="cursor: pointer; color: rgba(255, 202, 87, 0.9);">⭐ @${friend.username}</h4>
+                            <div class="user-info">
+                                📄 ${friendPosts} posts • Priority content enabled
+                            </div>
+                            <div class="user-actions">
+                                <button onclick="showUserProfile(${friend.id})">👤 View Profile</button>
+                                <button onclick="removeCloseFriend(${friend.id}); loadCloseFriends();">❌ Remove</button>
+                                <button onclick="startConversation(${friend.id})" style="background: #17a2b8;">💬 Message</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            html += `
+                    </div>
+                    <h3 style="color: #ffffff; margin-bottom: 20px;">🔥 Priority Posts from Close Friends</h3>
+                </div>
+            `;
+
+            // Show posts from close friends (both regular and close friends only posts)
+            const closeFriendIds = myCloseFriends.map(cf => cf.friendId);
+            const priorityPosts = posts.filter(p => {
+                return closeFriendIds.includes(p.authorId) || p.authorId === currentUser.id;
+            }).sort((a, b) => {
+                // Prioritize close friends only posts, then by timestamp
+                if (a.isCloseFriendsOnly && !b.isCloseFriendsOnly) return -1;
+                if (!a.isCloseFriendsOnly && b.isCloseFriendsOnly) return 1;
+                return b.timestamp - a.timestamp;
+            });
+
+            if (priorityPosts.length === 0) {
+                html += `
+                    <div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.7);">
+                        <div style="font-size: 48px; margin-bottom: 20px;">📭</div>
+                        <h3 style="color: #ffffff; margin-bottom: 15px;">No priority posts yet</h3>
+                        <p>Your close friends haven't posted anything yet.</p>
+                    </div>
+                `;
+            } else {
+                priorityPosts.forEach(post => {
+                    const isFromCloseFriend = closeFriendIds.includes(post.authorId);
+                    html += renderPost(post, isFromCloseFriend);
+                });
+            }
+
+            container.innerHTML = html;
+        }
+
+        function loadMessages() {
+            const container = document.getElementById('messages-content');
+            const myConversations = getConversations();
+            
+            if (myConversations.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <h3>💬 No conversations yet</h3>
+                        <p>Start a conversation with someone you follow!</p>
+                        <button onclick="showSection('users')" style="margin-top: 15px;">👥 Find Users</button>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div style="margin-bottom: 20px;">';
+            myConversations.forEach(conversation => {
+                const otherUser = users.find(u => u.id === conversation.otherUserId);
+                const lastMessage = conversation.lastMessage;
+                const unreadCount = conversation.unreadCount;
+                
+                html += `
+                    <div class="conversation-item" onclick="openConversation(${otherUser.id})">
+                        <div class="conversation-info">
+                            <strong>💬 @${otherUser.username}</strong>
+                            <div class="last-message">${lastMessage ? lastMessage.content.substring(0, 50) + (lastMessage.content.length > 50 ? '...' : '') : 'No messages yet'}</div>
+                            <div class="message-time">${lastMessage ? new Date(lastMessage.timestamp).toLocaleString() : ''}</div>
+                        </div>
+                        ${unreadCount > 0 ? `<div class="unread-badge">${unreadCount}</div>` : ''}
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            container.innerHTML = html;
+        }
+
+        function getConversations() {
+            const conversations = [];
+            const processedUsers = new Set();
+            
+            messages.forEach(message => {
+                let otherUserId;
+                if (message.senderId === currentUser.id) {
+                    otherUserId = message.receiverId;
+                } else if (message.receiverId === currentUser.id) {
+                    otherUserId = message.senderId;
+                } else {
+                    return;
+                }
+                
+                if (!processedUsers.has(otherUserId)) {
+                    processedUsers.add(otherUserId);
+                    
+                    const userMessages = messages.filter(m => 
+                        (m.senderId === currentUser.id && m.receiverId === otherUserId) ||
+                        (m.senderId === otherUserId && m.receiverId === currentUser.id)
+                    ).sort((a, b) => b.timestamp - a.timestamp);
+                    
+                    const unreadCount = messages.filter(m => 
+                        m.senderId === otherUserId && 
+                        m.receiverId === currentUser.id && 
+                        !m.isRead
+                    ).length;
+                    
+                    conversations.push({
+                        otherUserId,
+                        lastMessage: userMessages[0],
+                        unreadCount
+                    });
+                }
+            });
+            
+            return conversations.sort((a, b) => {
+                const aTime = a.lastMessage ? a.lastMessage.timestamp : 0;
+                const bTime = b.lastMessage ? b.lastMessage.timestamp : 0;
+                return bTime - aTime;
+            });
+        }
+
+        function openConversation(userId) {
+            const otherUser = users.find(u => u.id === userId);
+            const container = document.getElementById('conversation-content');
+            
+            // Mark messages as read
+            messages.forEach(message => {
+                if (message.senderId === userId && message.receiverId === currentUser.id) {
+                    message.isRead = true;
+                }
+            });
+            
+            const conversationMessages = messages.filter(m => 
+                (m.senderId === currentUser.id && m.receiverId === userId) ||
+                (m.senderId === userId && m.receiverId === currentUser.id)
+            ).sort((a, b) => a.timestamp - b.timestamp);
+            
+            let html = `
+                <div style="margin-bottom: 20px;">
+                    <button onclick="showSection('messages')" style="background: #6c757d; margin-right: 10px;">← Back to Messages</button>
+                    <span style="font-size: 18px; font-weight: bold; color: #667eea;">💬 Chat with @${otherUser.username}</span>
+                </div>
+                
+                <div class="messages-container" id="messages-container">
+            `;
+            
+            if (conversationMessages.length === 0) {
+                html += '<div style="text-align: center; color: #999; font-style: italic;">No messages yet. Start the conversation!</div>';
+            } else {
+                conversationMessages.forEach(message => {
+                    const isOwn = message.senderId === currentUser.id;
+                    html += `
+                        <div class="message-bubble ${isOwn ? 'own' : 'other'}">
+                            <div class="message-content">${message.content}</div>
+                            <div class="message-time" style="font-size: 11px; opacity: 0.7; margin-top: 5px;">${new Date(message.timestamp).toLocaleString()}</div>
+                        </div>
+                    `;
+                });
+            }
+            
+            html += `
+                </div>
+                
+                <div class="message-input-container">
+                    <input type="text" id="message-input" placeholder="Type a message..." onkeypress="handleMessageKeyPress(event, ${userId})">
+                    <button onclick="sendMessage(${userId})" class="send-btn">Send</button>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+            showSection('conversation');
+            
+            // Scroll to bottom
+            setTimeout(() => {
+                const messagesContainer = document.getElementById('messages-container');
+                if (messagesContainer) {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+            }, 100);
+        }
+
+        function handleMessageKeyPress(event, userId) {
+            if (event.key === 'Enter') {
+                sendMessage(userId);
+            }
+        }
+
+        function sendMessage(receiverId) {
+            const messageInput = document.getElementById('message-input');
+            const content = messageInput.value.trim();
+            
+            if (!content) {
+                showMessage('Please enter a message', 'error');
+                return;
+            }
+            
+            const newMessage = {
+                id: nextMessageId++,
+                senderId: currentUser.id,
+                receiverId: receiverId,
+                content: content,
+                timestamp: Date.now(),
+                isRead: false
+            };
+            
+            messages.push(newMessage);
+            
+            // Add notification for receiver
+            const receiver = users.find(u => u.id === receiverId);
+            addNotification(receiverId, `💬 ${currentUser.username} sent you a message: "${content.substring(0, 30)}${content.length > 30 ? '...' : ''}"`, 0);
+            
+            // Save data after sending message
+            saveDataToStorage();
+            
+            messageInput.value = '';
+            openConversation(receiverId); // Refresh conversation
+            showMessage('Message sent! 📤', 'success');
+        }
+
+        function loadNotifications() {
+            const container = document.getElementById('notifications-content');
+            const myNotifs = notifications
+                .filter(n => n.userId === currentUser.id)
+                .sort((a, b) => b.timestamp - a.timestamp);
+
+            if (myNotifs.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 60px 40px; color: rgba(255, 255, 255, 0.7);">
+                        <div style="font-size: 48px; margin-bottom: 20px;">🔔</div>
+                        <h3 style="color: #ffffff; margin-bottom: 15px;">No notifications</h3>
+                        <p>You're all caught up!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            let unreadNotifs = myNotifs.filter(n => !n.isRead);
+            let readNotifs = myNotifs.filter(n => n.isRead);
+
+            if (unreadNotifs.length > 0) {
+                html += '<h4 style="color: #ffffff; margin-bottom: 20px; font-weight: 700; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);">🔔 New Notifications</h4>';
+                unreadNotifs.forEach(notif => {
+                    html += `
+                        <div class="notification-item unread" onclick="markNotificationAsRead(${notif.id})" style="cursor: pointer;">
+                            ${notif.content}
+                            <div style="font-size: 12px; color: rgba(255, 255, 255, 0.6); margin-top: 8px;">${new Date(notif.timestamp).toLocaleString()}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            if (readNotifs.length > 0) {
+                html += '<h4 style="color: rgba(255, 255, 255, 0.7); margin: 30px 0 20px 0; font-weight: 600;">📋 Earlier Notifications</h4>';
+                readNotifs.slice(0, 10).forEach(notif => {
+                    html += `
+                        <div class="notification-item ${notif.priority === 1 ? 'priority' : ''}">
+                            ${notif.content}
+                            <div style="font-size: 12px; color: rgba(255, 255, 255, 0.6); margin-top: 8px;">${new Date(notif.timestamp).toLocaleString()}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            container.innerHTML = html;
+        }
+
+        function addNotification(userId, content, priority) {
+            notifications.push({
+                id: nextNotifId++,
+                userId,
+                content,
+                timestamp: Date.now(),
+                priority,
+                isRead: false
+            });
+        }
+
+        function markNotificationAsRead(notifId) {
+            const notif = notifications.find(n => n.id === notifId);
+            if (notif) {
+                notif.isRead = true;
+                loadNotifications();
+            }
+        }
+
+        // Media handling functions
+        let selectedFile = null;
+
+        function toggleMediaInputs() {
+            const postType = document.getElementById('post-type').value;
+            const mediaInputs = document.getElementById('media-inputs');
+            const fileInput = document.getElementById('media-file');
+            const mediaPreview = document.getElementById('media-preview');
+            
+            if (postType === 'text') {
+                mediaInputs.classList.add('hidden');
+                selectedFile = null;
+                fileInput.value = '';
+                document.getElementById('file-info').classList.add('hidden');
+                mediaPreview.classList.add('hidden');
+            } else {
+                mediaInputs.classList.remove('hidden');
+                updateFileAccept(postType);
+            }
+        }
+
+        function updateFileAccept(postType) {
+            const fileInput = document.getElementById('media-file');
+            switch(postType) {
+                case 'image':
+                    fileInput.accept = 'image/*';
+                    break;
+                case 'video':
+                    fileInput.accept = 'video/*';
+                    break;
+                case 'audio':
+                    fileInput.accept = 'audio/*';
+                    break;
+                default:
+                    fileInput.accept = 'image/*,video/*,audio/*';
+            }
+        }
+
+        function handleFileSelect() {
+            const fileInput = document.getElementById('media-file');
+            const fileInfo = document.getElementById('file-info');
+            const mediaPreview = document.getElementById('media-preview');
+            
+            if (fileInput.files && fileInput.files[0]) {
+                selectedFile = fileInput.files[0];
+                
+                // Show file info
+                fileInfo.innerHTML = `
+                    <strong>Selected file:</strong> ${selectedFile.name}<br>
+                    <strong>Size:</strong> ${(selectedFile.size / 1024 / 1024).toFixed(2)} MB<br>
+                    <strong>Type:</strong> ${selectedFile.type}
+                `;
+                fileInfo.classList.remove('hidden');
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    let previewHTML = '';
+                    if (selectedFile.type.startsWith('image/')) {
+                        previewHTML = `<img src="${e.target.result}" alt="Preview">`;
+                    } else if (selectedFile.type.startsWith('video/')) {
+                        previewHTML = `<video controls><source src="${e.target.result}" type="${selectedFile.type}"></video>`;
+                    } else if (selectedFile.type.startsWith('audio/')) {
+                        previewHTML = `<audio controls><source src="${e.target.result}" type="${selectedFile.type}"></audio>`;
+                    }
+                    
+                    mediaPreview.innerHTML = previewHTML;
+                    mediaPreview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(selectedFile);
+            } else {
+                selectedFile = null;
+                fileInfo.classList.add('hidden');
+                mediaPreview.classList.add('hidden');
+            }
+        }
+
+        function getMediaIcon(mediaType) {
+            switch(mediaType) {
+                case 'image': return '🖼️';
+                case 'video': return '🎥';
+                case 'audio': return '🎵';
+                default: return '📄';
+            }
+        }
+
+        function renderPost(post, isFromCloseFriend = false) {
+            const mediaIcon = getMediaIcon(post.mediaType);
+            const postClass = post.isCloseFriendsOnly ? 'post close-friends' : (isFromCloseFriend ? 'post priority' : 'post');
+            
+            let mediaHTML = '';
+            if (post.mediaType !== 'text' && post.mediaPath) {
+                // Create media content based on actual uploaded files
+                let mediaContent = '';
+                if (post.mediaType === 'image') {
+                    // Use the actual uploaded file path or a placeholder
+                    const imageSrc = post.mediaPath.startsWith('data:') ? post.mediaPath : `https://picsum.photos/600/400?random=${post.id}`;
+                    mediaContent = `<img src="${imageSrc}" alt="${post.mediaDescription}" onclick="openImageModal('${imageSrc}')">`;
+                } else if (post.mediaType === 'video') {
+                    const videoSrc = post.mediaPath.startsWith('data:') ? post.mediaPath : '#';
+                    mediaContent = `<video controls ${!post.mediaPath.startsWith('data:') ? `poster="https://picsum.photos/600/400?random=${post.id}"` : ''}>
+                        <source src="${videoSrc}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>`;
+                } else if (post.mediaType === 'audio') {
+                    const audioSrc = post.mediaPath.startsWith('data:') ? post.mediaPath : '#';
+                    mediaContent = `<audio controls style="width: 100%;">
+                        <source src="${audioSrc}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>`;
+                }
+                
+                mediaHTML = `
+                    <div class="post-media">
+                        ${mediaContent}
+                    </div>
+                    <div class="media-info">
+                        <h4>${mediaIcon} ${post.mediaType.charAt(0).toUpperCase() + post.mediaType.slice(1)} Content</h4>
+                        <p><strong>Description:</strong> ${post.mediaDescription}</p>
+                    </div>
+                `;
+            }
+            
+            const timeAgo = getTimeAgo(post.timestamp);
+            
+            return `
+                <div class="${postClass}">
+                    <div class="post-header">
+                        <div class="post-author-info">
+                            <div class="post-avatar">${post.authorName.charAt(0).toUpperCase()}</div>
+                            <div>
+                                <h4 class="post-author" onclick="showUserProfile(${post.authorId})">@${post.authorName}</h4>
+                                <p class="post-time">${timeAgo}</p>
+                            </div>
+                        </div>
+                        <div class="post-actions">
+                            ${post.isCloseFriendsOnly ? '<span class="post-badge close-friends">⭐ Close Friends</span>' : ''}
+                            ${isFromCloseFriend && !post.isCloseFriendsOnly ? '<span class="post-badge">🔥 Priority</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="post-content">${post.content}</div>
+                    ${mediaHTML}
+                    <div class="post-footer">
+                        <div class="post-interactions">
+                            <button class="interaction-btn" onclick="likePost(${post.id})">
+                                <span>❤️</span> Like
+                            </button>
+                            <button class="interaction-btn" onclick="showUserProfile(${post.authorId})">
+                                <span>💬</span> Comment
+                            </button>
+                            <button class="interaction-btn" onclick="startConversation(${post.authorId})">
+                                <span>📤</span> Message
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Social functions
+        function followUser(userId) {
+            if (!follows.some(f => f.followerId === currentUser.id && f.followingId === userId)) {
+                follows.push({ followerId: currentUser.id, followingId: userId });
+                const user = users.find(u => u.id === userId);
+                addNotification(userId, `${currentUser.username} started following you`, 0);
+                showMessage(`Now following @${user.username}! 🎉`, 'success');
+                updateStats();
+                saveDataToStorage(); // Save after follow action
+            }
+        }
+
+        function unfollowUser(userId) {
+            const index = follows.findIndex(f => f.followerId === currentUser.id && f.followingId === userId);
+            if (index !== -1) {
+                follows.splice(index, 1);
+                // Also remove from close friends
+                const cfIndex = closeFriends.findIndex(cf => cf.userId === currentUser.id && cf.friendId === userId);
+                if (cfIndex !== -1) {
+                    closeFriends.splice(cfIndex, 1);
+                }
+                const user = users.find(u => u.id === userId);
+                showMessage(`Unfollowed @${user.username}`, 'success');
+                updateStats();
+                saveDataToStorage(); // Save after unfollow action
+            }
+        }
+
+        function addCloseFriend(friendId) {
+            if (!closeFriends.some(cf => cf.userId === currentUser.id && cf.friendId === friendId)) {
+                closeFriends.push({ userId: currentUser.id, friendId });
+                const user = users.find(u => u.id === friendId);
+                addNotification(friendId, `${currentUser.username} added you as a close friend! ⭐`, 1);
+                showMessage(`@${user.username} added as close friend! ⭐`, 'success');
+                updateStats();
+                saveDataToStorage(); // Save after adding close friend
+            }
+        }
+
+        function removeCloseFriend(friendId) {
+            const index = closeFriends.findIndex(cf => cf.userId === currentUser.id && cf.friendId === friendId);
+            if (index !== -1) {
+                closeFriends.splice(index, 1);
+                const user = users.find(u => u.id === friendId);
+                showMessage(`@${user.username} removed from close friends`, 'success');
+                updateStats();
+                saveDataToStorage(); // Save after removing close friend
+            }
+        }
+
+        function createPost() {
+            const content = document.getElementById('post-content').value.trim();
+            const audience = document.getElementById('post-audience').value;
+            const postType = document.getElementById('post-type').value;
+            const mediaDescription = document.getElementById('media-description').value.trim();
+
+            if (!content) {
+                showMessage('Please enter some content for your post', 'error');
+                return;
+            }
+
+            let mediaPath = '';
+            if (selectedFile) {
+                // For demo purposes, we'll store the file as a data URL
+                // In a real app, you'd upload the file to a server and get a URL back
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    mediaPath = e.target.result; // This is the data URL
+                    
+                    const newPost = {
+                        id: nextPostId++,
+                        authorId: currentUser.id,
+                        authorName: currentUser.username,
+                        content: content,
+                        timestamp: Date.now(),
+                        isCloseFriendsOnly: audience === 'close-friends',
+                        mediaType: postType,
+                        mediaPath: mediaPath,
+                        mediaDescription: mediaDescription
+                    };
+
+                    posts.push(newPost);
+                    
+                    // Save data immediately after creating post
+                    saveDataToStorage();
+                    
+                    // Clear form
+                    clearPostForm();
+                    
+                    // Notify followers
+                    notifyFollowers(newPost);
+                    
+                    showMessage('Post created successfully! ✨', 'success');
+                    updateStats();
+                    showSection('feed');
+                };
+                reader.readAsDataURL(selectedFile);
+            } else {
+                // No file selected, create text post
+                const newPost = {
+                    id: nextPostId++,
+                    authorId: currentUser.id,
+                    authorName: currentUser.username,
+                    content: content,
+                    timestamp: Date.now(),
+                    isCloseFriendsOnly: audience === 'close-friends',
+                    mediaType: postType,
+                    mediaPath: mediaPath,
+                    mediaDescription: mediaDescription
+                };
+
+                posts.push(newPost);
+                
+                // Save data immediately after creating post
+                saveDataToStorage();
+                
+                // Clear form
+                clearPostForm();
+                
+                // Notify followers
+                notifyFollowers(newPost);
+                
+                showMessage('Post created successfully! ✨', 'success');
+                updateStats();
+                showSection('feed');
+            }
+        }
+
+        function clearPostForm() {
+            document.getElementById('post-content').value = '';
+            document.getElementById('post-audience').value = 'all';
+            document.getElementById('post-type').value = 'text';
+            document.getElementById('media-description').value = '';
+            selectedFile = null;
+            document.getElementById('media-file').value = '';
+            document.getElementById('file-info').classList.add('hidden');
+            document.getElementById('media-preview').classList.add('hidden');
+            toggleMediaInputs(); // Hide media inputs
+        }
+
+        function notifyFollowers(newPost) {
+            const myFollowers = follows.filter(f => f.followingId === currentUser.id);
+            myFollowers.forEach(follow => {
+                if (newPost.isCloseFriendsOnly) {
+                    // Only notify close friends for close friends posts
+                    if (closeFriends.some(cf => cf.userId === currentUser.id && cf.friendId === follow.followerId)) {
+                        addNotification(follow.followerId, `⭐ ${currentUser.username} shared a close friends post: "${newPost.content.substring(0, 30)}${newPost.content.length > 30 ? '...' : ''}"`, 1);
+                    }
+                    // Don't notify regular followers about close friends posts
+                } else {
+                    // Notify all followers about regular posts, but mark as priority if they're close friends
+                    const isCloseFriend = closeFriends.some(cf => cf.userId === currentUser.id && cf.friendId === follow.followerId);
+                    const priority = isCloseFriend ? 1 : 0;
+                    const prefix = isCloseFriend ? '🔥 ' : '';
+                    addNotification(follow.followerId, `${prefix}${currentUser.username} shared a new post: "${newPost.content.substring(0, 30)}${newPost.content.length > 30 ? '...' : ''}"`, priority);
+                }
+            });
+        }
+
+        function startConversation(userId) {
+            const user = users.find(u => u.id === userId);
+            
+            // Check if conversation already exists
+            const existingMessages = messages.filter(m => 
+                (m.senderId === currentUser.id && m.receiverId === userId) ||
+                (m.senderId === userId && m.receiverId === currentUser.id)
+            );
+            
+            if (existingMessages.length === 0) {
+                // Create a welcome message
+                const welcomeMessage = {
+                    id: nextMessageId++,
+                    senderId: currentUser.id,
+                    receiverId: userId,
+                    content: `Hi @${user.username}! 👋`,
+                    timestamp: Date.now(),
+                    isRead: false
+                };
+                messages.push(welcomeMessage);
+                addNotification(userId, `💬 ${currentUser.username} started a conversation with you`, 0);
+            }
+            
+            openConversation(userId);
+        }
+
+        // Search functions
+        function searchUsers() {
+            const searchTerm = document.getElementById('user-search').value.trim().toLowerCase();
+            if (!searchTerm) {
+                loadUsers();
+                return;
+            }
+
+            const container = document.getElementById('users-content');
+            const matchingUsers = users.filter(u => 
+                u.id !== currentUser.id && 
+                u.username.toLowerCase().includes(searchTerm)
+            );
+
+            if (matchingUsers.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;">No users found matching your search</div>';
+                return;
+            }
+
+            let html = '';
+            matchingUsers.forEach(user => {
+                const isFollowing = follows.some(f => f.followerId === currentUser.id && f.followingId === user.id);
+                const isCloseFriend = closeFriends.some(cf => cf.userId === currentUser.id && cf.friendId === user.id);
+                const userPosts = posts.filter(p => p.authorId === user.id).length;
+
+                html += `
+                    <div class="user-card">
+                        <h4 onclick="showUserProfile(${user.id})" style="cursor: pointer;">@${user.username}</h4>
+                        <div class="user-info">
+                            📄 ${userPosts} posts • 📅 Joined ${new Date(user.createdAt).toLocaleDateString()}
+                            ${isCloseFriend ? ' • ⭐ Close Friend' : ''}
+                        </div>
+                        <div class="user-actions">
+                            <button onclick="showUserProfile(${user.id})">👤 View Profile</button>
+                            ${isFollowing 
+                                ? `<button class="danger" onclick="unfollowUser(${user.id}); searchUsers();">➖ Unfollow</button>`
+                                : `<button class="success" onclick="followUser(${user.id}); searchUsers();">➕ Follow</button>`
+                            }
+                            ${isFollowing && !isCloseFriend
+                                ? `<button class="warning" onclick="addCloseFriend(${user.id}); searchUsers();">⭐ Add Friend</button>`
+                                : ''
+                            }
+                            ${isCloseFriend
+                                ? `<button onclick="removeCloseFriend(${user.id}); searchUsers();">❌ Remove Friend</button>`
+                                : ''
+                            }
+                            <button onclick="startConversation(${user.id})" style="background: #17a2b8;">💬 Message</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function quickSearch() {
+            const searchTerm = document.getElementById('quick-search').value.trim().toLowerCase();
+            const resultsContainer = document.getElementById('quick-search-results');
+
+            if (!searchTerm) {
+                resultsContainer.innerHTML = '';
+                return;
+            }
+
+            const matchingUsers = users.filter(u => 
+                u.id !== currentUser.id && 
+                u.username.toLowerCase().includes(searchTerm)
+            ).slice(0, 3);
+
+            if (matchingUsers.length === 0) {
+                resultsContainer.innerHTML = '<div style="padding: 10px; color: #999; font-style: italic;">No users found</div>';
+                return;
+            }
+
+            let html = '';
+            matchingUsers.forEach(user => {
+                const isFollowing = follows.some(f => f.followerId === currentUser.id && f.followingId === user.id);
+                html += `
+                    <div style="padding: 8px; background: #f8f9fa; margin-bottom: 5px; border-radius: 5px; cursor: pointer;" onclick="showUserProfile(${user.id})">
+                        <strong>@${user.username}</strong>
+                        <div style="font-size: 12px; color: #666;">${isFollowing ? 'Following' : 'Not following'}</div>
+                    </div>
+                `;
+            });
+
+            resultsContainer.innerHTML = html;
+        }
+
+        // Utility functions
+        function showSkeletonLoader(containerId, count = 3) {
+            const container = document.getElementById(containerId);
+            let html = '';
+            for (let i = 0; i < count; i++) {
+                html += `
+                    <div class="skeleton skeleton-post">
+                        <div style="padding: 20px;">
+                            <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                                <div class="skeleton skeleton-avatar"></div>
+                                <div style="flex: 1;">
+                                    <div class="skeleton skeleton-text" style="width: 30%;"></div>
+                                    <div class="skeleton skeleton-text" style="width: 20%; height: 15px;"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton skeleton-text" style="width: 90%;"></div>
+                            <div class="skeleton skeleton-text" style="width: 70%;"></div>
+                            <div class="skeleton skeleton-text" style="width: 50%;"></div>
+                        </div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        function getTimeAgo(timestamp) {
+            const now = Date.now();
+            const diff = now - timestamp;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            
+            if (minutes < 1) return 'Just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            if (days < 7) return `${days}d ago`;
+            return new Date(timestamp).toLocaleDateString();
+        }
+
+        function likePost(postId) {
+            // In a real app, you'd track likes in the database
+            showMessage('Post liked! ❤️', 'success');
+        }
+
+        function openImageModal(imageSrc) {
+            // Create a simple modal for image viewing
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                cursor: pointer;
+            `;
+            
+            const img = document.createElement('img');
+            img.src = imageSrc;
+            img.style.cssText = `
+                max-width: 90%;
+                max-height: 90%;
+                border-radius: 10px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            `;
+            
+            modal.appendChild(img);
+            document.body.appendChild(modal);
+            
+            modal.onclick = () => modal.remove();
+        }
+
+        function showMessage(text, type = 'success') {
+            const container = document.getElementById('message-container');
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            container.appendChild(message);
+
+            setTimeout(() => {
+                message.remove();
+            }, 3000);
+        }
+
+        function updateStats() {
+            const myPosts = posts.filter(p => p.authorId === currentUser.id);
+            const myFollowers = follows.filter(f => f.followingId === currentUser.id);
+            const myFollowing = follows.filter(f => f.followerId === currentUser.id);
+
+            // Update main stats
+            document.getElementById('stats-posts').textContent = myPosts.length;
+            document.getElementById('stats-followers').textContent = myFollowers.length;
+            document.getElementById('stats-following').textContent = myFollowing.length;
+
+            // Update sidebar stats
+            document.getElementById('sidebar-posts').textContent = myPosts.length;
+            document.getElementById('sidebar-followers').textContent = myFollowers.length;
+            document.getElementById('sidebar-following').textContent = myFollowing.length;
+            document.getElementById('sidebar-username').textContent = '@' + currentUser.username;
+
+            // Update recent notifications
+            const recentNotifs = notifications
+                .filter(n => n.userId === currentUser.id && !n.isRead)
+                .sort((a, b) => b.timestamp - a.timestamp)
+                .slice(0, 3);
+
+            const notifContainer = document.getElementById('recent-notifications-list');
+            if (recentNotifs.length === 0) {
+                notifContainer.innerHTML = '<div class="notification-item">🎉 All caught up!</div>';
+            } else {
+                let html = '';
+                recentNotifs.forEach(notif => {
+                    html += `<div class="notification-item ${notif.priority === 1 ? 'priority' : ''}">${notif.content}</div>`;
+                });
+                notifContainer.innerHTML = html;
+            }
+        }
+
+        function showDataManagement() {
+            showSection('data-management');
+            updateStorageInfo();
+        }
+
+        function updateStorageInfo() {
+            const storageInfo = document.getElementById('storage-info');
+            if (!storageInfo) return;
+
+            try {
+                const dataSize = JSON.stringify({
+                    users, posts, follows, closeFriends, messages, notifications
+                }).length;
+                
+                const sizeInKB = (dataSize / 1024).toFixed(2);
+                const sizeInMB = (dataSize / (1024 * 1024)).toFixed(2);
+                
+                const lastSaved = localStorage.getItem('prioritySocialMediaData');
+                const lastSavedDate = lastSaved ? new Date(JSON.parse(lastSaved).lastSaved || Date.now()) : null;
+                
+                storageInfo.innerHTML = `
+                    <p><strong>👥 Users:</strong> ${users.length}</p>
+                    <p><strong>📄 Posts:</strong> ${posts.length}</p>
+                    <p><strong>💬 Messages:</strong> ${messages.length}</p>
+                    <p><strong>🔔 Notifications:</strong> ${notifications.length}</p>
+                    <p><strong>🔗 Follows:</strong> ${follows.length}</p>
+                    <p><strong>⭐ Close Friends:</strong> ${closeFriends.length}</p>
+                    <p><strong>💾 Data Size:</strong> ${sizeInKB} KB (${sizeInMB} MB)</p>
+                    ${lastSavedDate ? `<p><strong>🕒 Last Saved:</strong> ${lastSavedDate.toLocaleString()}</p>` : ''}
+                `;
+            } catch (error) {
+                storageInfo.innerHTML = '<p style="color: #ff6b6b;">Error calculating storage info</p>';
+            }
+        }
+
+        // Initialize app
+        console.log('🚀 Priority Social Media - Complete Working Version Loaded!');
+        
+        // Load saved data on startup
+        document.addEventListener('DOMContentLoaded', function() {
+            const dataLoaded = loadDataFromStorage();
+            
+            if (dataLoaded && users.length > 0) {
+                console.log(`✅ Welcome back! Found ${users.length} existing accounts.`);
+                showMessage(`Welcome back! Found ${users.length} existing accounts.`, 'success');
+            } else {
+                console.log('📝 Starting fresh - create your first account!');
+            }
+            
+            // Enable auto-save
+            enableAutoSave();
+            
+            console.log('✨ Features included:');
+            console.log('  - Persistent data storage with auto-save');
+            console.log('  - Full messaging system with real-time conversations');
+            console.log('  - Notifications system with priority alerts');
+            console.log('  - Media posts (image, video, audio) with previews');
+            console.log('  - Close friends system with priority content');
+            console.log('  - Complete follow/unfollow functionality');
+            console.log('  - User profiles with stats and post history');
+            console.log('  - Advanced search and discovery');
+            console.log('  - Responsive design for all devices');
+            console.log('  - Glassmorphic design with premium UI/UX');
+            console.log('  - Data export and backup functionality');
+        });
+    </script>
+</body>
+</html>
