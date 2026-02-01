@@ -1,4 +1,4 @@
-# 🚀 Priority Social Media - Glassmorphic Edition
+# 🚀 Priority Social Media 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![C99](https://img.shields.io/badge/C99-00599C?style=flat&logo=c&logoColor=white)](https://en.wikipedia.org/wiki/C_(programming_language))
